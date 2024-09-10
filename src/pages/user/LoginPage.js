@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../redux/authSlice';
-import AuthForm from '../components/AuthForm'; // Import the new AuthForm component
+import { loginUser } from '../../redux/authSlice';
+import AuthForm from '../../components/AuthForm'; // Import the new AuthForm component
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');

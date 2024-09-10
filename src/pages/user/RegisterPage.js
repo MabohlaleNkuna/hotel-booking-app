@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../redux/authSlice';
-import AuthForm from '../components/AuthForm'; 
+import { registerUser } from '../../redux/authSlice';
+import AuthForm from '../../components/AuthForm'; 
 
 const RegisterPage = () => {
   const [email, setEmail] = useState('');
