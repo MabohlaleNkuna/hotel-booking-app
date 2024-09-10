@@ -1,14 +1,13 @@
-// LoginPage.js
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../redux/authSlice';
-import StyledForm from '../components/StyledForm';
+import AuthForm from '../components/AuthForm'; // Import the new AuthForm component
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.auth);
+  const {  error } = useSelector((state) => state.auth);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -16,11 +15,14 @@ const LoginPage = () => {
   };
 
   return (
-    <StyledForm
+    <AuthForm
       title="Login"
-      buttonText="Login"
+      email={email}
+      setEmail={setEmail}
+      password={password}
+      setPassword={setPassword}
       onSubmit={handleLogin}
-      loading={loading}
+      buttonText="Login"
       error={error}
     />
   );
