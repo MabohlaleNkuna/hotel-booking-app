@@ -1,14 +1,14 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
-import Home from '../pages/user/HomePage';
+import Home from '../pages/user/UserHomepage';
 import AccommodationDetails from '../pages/user/AccommodationDetails';
 import BookingConfirmation from '../pages/user/BookingConfirmation';
 import SearchResults from '../pages/user/SearchResults';
 import Reviews from '../pages/user/Reviews';
 import BookingHistory from '../pages/user/BookingHistory';
 import RegisterPage from '../pages/user/RegisterPage'; 
-import LoginPage from '../pages/user/LoginPage'; 
+import LoginPage from '../pages/user/UserLogin'; 
 import UserProfile from '../pages/user/UserProfile';
 import ProtectedRoute from './ProtectedRoute'; 
 

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../redux/authSlice';
 import AuthForm from '../../components/AuthForm'; // Import the new AuthForm component
 
-const LoginPage = () => {
+const UserLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
@@ -28,4 +28,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default UserLogin;

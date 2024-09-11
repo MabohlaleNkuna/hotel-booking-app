@@ -1,5 +1,7 @@
+// components/Navigation.js
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const navStyles = {
   backgroundColor: '#004AAD',
@@ -7,8 +9,8 @@ const navStyles = {
   position: 'fixed',
   top: 0,
   left: 0,
-  width: '200px', // Width of the sidebar
-  height: '100%', // Full height
+  width: '200px',
+  height: '100%',
   zIndex: 1000,
   display: 'flex',
   flexDirection: 'column',
@@ -36,87 +38,136 @@ const linkStyles = {
 };
 
 const linkHoverStyles = {
-  backgroundColor: '#003B7A', // Darker shade on hover
+  backgroundColor: '#003B7A',
+};
+
+const linkActiveStyles = {
+  backgroundColor: '#002F6C',
 };
 
 const Navigation = () => {
+  const location = useLocation();
+  const user = useSelector((state) => state.auth.user);
+
+  const isAdmin = user?.role === 'admin';
+  const isUser = user?.role === 'user';
+
   return (
     <nav style={navStyles}>
       <ul style={ulStyles}>
         <li style={liStyles}>
           <Link
             to="/"
-            style={linkStyles}
+            style={{ ...linkStyles, ...(location.pathname === '/' ? linkActiveStyles : {}) }}
             onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
             onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
           >
             Home
           </Link>
         </li>
-        <li style={liStyles}>
-          <Link
-            to="/accommodation-details"
-            style={linkStyles}
-            onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
-            onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
-          >
-            Accommodation Details
-          </Link>
-        </li>
-        <li style={liStyles}>
-          <Link
-            to="/booking-confirmation"
-            style={linkStyles}
-            onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
-            onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
-          >
-            Booking Confirmation
-          </Link>
-        </li>
-        <li style={liStyles}>
-          <Link
-            to="/search-results"
-            style={linkStyles}
-            onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
-            onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
-          >
-            Search Results
-          </Link>
-        </li>
-        <li style={liStyles}>
-          <Link
-            to="/reviews"
-            style={linkStyles}
-            onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
-            onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
-          >
-            Reviews
-          </Link>
-        </li>
-        <li style={liStyles}>
-          <Link
-            to="/booking-history"
-            style={linkStyles}
-            onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
-            onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
-          >
-            Booking History
-          </Link>
-        </li>
-        <li style={liStyles}>
-          <Link
-            to="/profile"
-            style={linkStyles}
-            onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
-            onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
-          >
-            Profile
-          </Link>
-        </li>
+        {isUser && (
+          <>
+            <li style={liStyles}>
+              <Link
+                to="/accommodation-details"
+                style={{ ...linkStyles, ...(location.pathname === '/accommodation-details' ? linkActiveStyles : {}) }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
+                onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
+              >
+                Accommodation Details
+              </Link>
+            </li>
+            <li style={liStyles}>
+              <Link
+                to="/booking-confirmation"
+                style={{ ...linkStyles, ...(location.pathname === '/booking-confirmation' ? linkActiveStyles : {}) }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
+                onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
+              >
+                Booking Confirmation
+              </Link>
+            </li>
+            <li style={liStyles}>
+              <Link
+                to="/search-results"
+                style={{ ...linkStyles, ...(location.pathname === '/search-results' ? linkActiveStyles : {}) }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
+                onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
+              >
+                Search Results
+              </Link>
+            </li>
+            <li style={liStyles}>
+              <Link
+                to="/reviews"
+                style={{ ...linkStyles, ...(location.pathname === '/reviews' ? linkActiveStyles : {}) }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
+                onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
+              >
+                Reviews
+              </Link>
+            </li>
+            <li style={liStyles}>
+              <Link
+                to="/booking-history"
+                style={{ ...linkStyles, ...(location.pathname === '/booking-history' ? linkActiveStyles : {}) }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
+                onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
+              >
+                Booking History
+              </Link>
+            </li>
+            <li style={liStyles}>
+              <Link
+                to="/profile"
+                style={{ ...linkStyles, ...(location.pathname === '/profile' ? linkActiveStyles : {}) }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
+                onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
+              >
+                Profile
+              </Link>
+            </li>
+          </>
+        )}
+        {isAdmin && (
+          <>
+            <li style={liStyles}>
+              <Link
+                to="/admin/dashboard"
+                style={{ ...linkStyles, ...(location.pathname === '/admin/dashboard' ? linkActiveStyles : {}) }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
+                onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
+              >
+                Admin Dashboard
+              </Link>
+            </li>
+            <li style={liStyles}>
+              <Link
+                to="/admin/manage-accommodations"
+                style={{ ...linkStyles, ...(location.pathname === '/admin/manage-accommodations' ? linkActiveStyles : {}) }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
+                onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
+              >
+                Manage Accommodations
+              </Link>
+            </li>
+            <li style={liStyles}>
+              <Link
+                to="/admin/manage-reservations"
+                style={{ ...linkStyles, ...(location.pathname === '/admin/manage-reservations' ? linkActiveStyles : {}) }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
+                onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
+              >
+                Manage Reservations
+              </Link>
+            </li>
+            {/* Add more admin-specific links as needed */}
+          </>
+        )}
         <li style={liStyles}>
           <Link
             to="/register"
-            style={linkStyles}
+            style={{ ...linkStyles, ...(location.pathname === '/register' ? linkActiveStyles : {}) }}
             onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
             onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
           >
@@ -126,7 +177,7 @@ const Navigation = () => {
         <li style={liStyles}>
           <Link
             to="/login"
-            style={linkStyles}
+            style={{ ...linkStyles, ...(location.pathname === '/login' ? linkActiveStyles : {}) }}
             onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
             onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
           >
