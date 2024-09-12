@@ -3,14 +3,14 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { db, storage } from '../firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Import Firebase Storage functions
 
-// Async thunks
+
 export const fetchAccommodations = createAsyncThunk('accommodations/fetchAccommodations', async () => {
   const snapshot = await db.collection('accommodations').get();
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 });
 
 export const addAccommodation = createAsyncThunk('accommodations/addAccommodation', async ({ newAccommodationData, imageFile }) => {
-  // Upload the image if provided
+
   let imageUrl = '';
   if (imageFile) {
     const storageRef = ref(storage, `images/${imageFile.name}`);
@@ -18,7 +18,7 @@ export const addAccommodation = createAsyncThunk('accommodations/addAccommodatio
     imageUrl = await getDownloadURL(storageRef);
   }
 
-  // Add accommodation data with image URL if available
+ 
   const docRef = await db.collection('accommodations').add({
     ...newAccommodationData,
     imageUrl,
@@ -27,7 +27,7 @@ export const addAccommodation = createAsyncThunk('accommodations/addAccommodatio
 });
 
 export const editAccommodation = createAsyncThunk('accommodations/editAccommodation', async ({ id, updatedData, imageFile }) => {
-  // Upload the new image if provided
+ 
   let imageUrl = updatedData.imageUrl;
   if (imageFile) {
     const storageRef = ref(storage, `images/${imageFile.name}`);
@@ -35,7 +35,7 @@ export const editAccommodation = createAsyncThunk('accommodations/editAccommodat
     imageUrl = await getDownloadURL(storageRef);
   }
 
-  // Update accommodation data with new image URL if available
+  
   await db.collection('accommodations').doc(id).update({
     ...updatedData,
     imageUrl,
