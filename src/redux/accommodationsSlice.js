@@ -1,16 +1,16 @@
-// accommodationsSlice.js
+// src/redux/accommodationsSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { db, storage } from '../firebase';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Import Firebase Storage functions
+import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db, storage } from '../firebaseConfig.js'; 
 
-
+// Async Thunks
 export const fetchAccommodations = createAsyncThunk('accommodations/fetchAccommodations', async () => {
-  const snapshot = await db.collection('accommodations').get();
+  const snapshot = await getDocs(collection(db, 'accommodations'));
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 });
 
 export const addAccommodation = createAsyncThunk('accommodations/addAccommodation', async ({ newAccommodationData, imageFile }) => {
-
   let imageUrl = '';
   if (imageFile) {
     const storageRef = ref(storage, `images/${imageFile.name}`);
@@ -18,8 +18,7 @@ export const addAccommodation = createAsyncThunk('accommodations/addAccommodatio
     imageUrl = await getDownloadURL(storageRef);
   }
 
- 
-  const docRef = await db.collection('accommodations').add({
+  const docRef = await addDoc(collection(db, 'accommodations'), {
     ...newAccommodationData,
     imageUrl,
   });
@@ -27,7 +26,6 @@ export const addAccommodation = createAsyncThunk('accommodations/addAccommodatio
 });
 
 export const editAccommodation = createAsyncThunk('accommodations/editAccommodation', async ({ id, updatedData, imageFile }) => {
- 
   let imageUrl = updatedData.imageUrl;
   if (imageFile) {
     const storageRef = ref(storage, `images/${imageFile.name}`);
@@ -35,8 +33,8 @@ export const editAccommodation = createAsyncThunk('accommodations/editAccommodat
     imageUrl = await getDownloadURL(storageRef);
   }
 
-  
-  await db.collection('accommodations').doc(id).update({
+  const docRef = doc(db, 'accommodations', id);
+  await updateDoc(docRef, {
     ...updatedData,
     imageUrl,
   });
@@ -44,11 +42,12 @@ export const editAccommodation = createAsyncThunk('accommodations/editAccommodat
 });
 
 export const removeAccommodation = createAsyncThunk('accommodations/removeAccommodation', async (id) => {
-  await db.collection('accommodations').doc(id).delete();
+  const docRef = doc(db, 'accommodations', id);
+  await deleteDoc(docRef);
   return id;
 });
 
-// Slice
+// Slice Definition
 const accommodationsSlice = createSlice({
   name: 'accommodations',
   initialState: {
@@ -63,24 +62,48 @@ const accommodationsSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchAccommodations.fulfilled, (state, action) => {
-        state.list = action.payload;
         state.loading = false;
+        state.list = action.payload;
       })
       .addCase(fetchAccommodations.rejected, (state, action) => {
-        state.error = action.error.message;
         state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(addAccommodation.pending, (state) => {
+        state.loading = true;
       })
       .addCase(addAccommodation.fulfilled, (state, action) => {
+        state.loading = false;
         state.list.push(action.payload);
       })
+      .addCase(addAccommodation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(editAccommodation.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(editAccommodation.fulfilled, (state, action) => {
-        const index = state.list.findIndex((item) => item.id === action.payload.id);
+        state.loading = false;
+        const index = state.list.findIndex(accommodation => accommodation.id === action.payload.id);
         if (index !== -1) {
-          state.list[index] = { ...state.list[index], ...action.payload.updatedData };
+          state.list[index] = action.payload.updatedData;
         }
       })
+      .addCase(editAccommodation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(removeAccommodation.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(removeAccommodation.fulfilled, (state, action) => {
-        state.list = state.list.filter((item) => item.id !== action.payload);
+        state.loading = false;
+        state.list = state.list.filter(accommodation => accommodation.id !== action.payload);
+      })
+      .addCase(removeAccommodation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
       });
   },
 });

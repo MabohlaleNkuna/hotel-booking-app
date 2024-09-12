@@ -1,6 +1,6 @@
 //authSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { auth } from '../firebase';
+import { auth } from '../firebaseConfig.js';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 
 export const registerUser = createAsyncThunk(
