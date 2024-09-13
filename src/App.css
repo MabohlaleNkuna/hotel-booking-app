@@ -46,3 +46,24 @@ body {
   padding: 20px;
   width: calc(100% - 200px);
 }
+.admin-dashboard {
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+.section {
+  margin-bottom: 2rem;
+}
+
+.section h2 {
+  margin-bottom: 1rem;
+}
+
+.table {
+  margin-top: 1rem;
+}
+
+.btn-primary {
+  margin-bottom: 1rem;
+}
+

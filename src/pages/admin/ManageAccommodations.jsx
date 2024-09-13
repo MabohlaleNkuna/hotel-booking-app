@@ -104,6 +104,15 @@ const ManageAccommodations = () => {
           <div key={accommodation.id}>
             <h3>{accommodation.name}</h3>
             <p>{accommodation.description}</p>
+            <p>{accommodation.address}</p>
+            {accommodation.mainImage && (
+              <img src={accommodation.mainImage} alt={accommodation.name} style={{ width: '100px', height: 'auto' }} />
+            )}
+            <div>
+              {accommodation.galleryImages && accommodation.galleryImages.map((image, index) => (
+                <img key={index} src={image} alt={`${accommodation.name} gallery ${index}`} style={{ width: '50px', height: 'auto', marginRight: '5px' }} />
+              ))}
+            </div>
             <button onClick={() => handleEdit(accommodation)}>Edit</button>
             <button onClick={() => handleDelete(accommodation.id)}>Delete</button>
           </div>

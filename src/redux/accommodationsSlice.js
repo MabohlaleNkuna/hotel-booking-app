@@ -4,7 +4,7 @@ import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebaseConfig.js'; 
 
-// Async Thunks
+
 export const fetchAccommodations = createAsyncThunk('accommodations/fetchAccommodations', async () => {
   const snapshot = await getDocs(collection(db, 'accommodations'));
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));

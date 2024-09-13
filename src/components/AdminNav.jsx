@@ -20,6 +20,7 @@ const StyledLink = styled(NavLink)`
 
 const AdminNav = () => (
   <Nav>
+    <StyledLink to="/admin/dashboard">Admin Dashboard</StyledLink>
     <StyledLink to="/manage-accommodations">Manage Accommodations</StyledLink>
     <StyledLink to="/manage-rooms">Manage Rooms</StyledLink>
   </Nav>

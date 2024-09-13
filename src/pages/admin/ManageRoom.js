@@ -5,7 +5,7 @@ import { Button, Form, Col, Row } from 'react-bootstrap';
 
 const ManageRoom = () => {
   const dispatch = useDispatch();
-  const { list: rooms, loading } = useSelector((state) => state.rooms);
+  const { list: rooms, loading, error } = useSelector((state) => state.rooms);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -34,13 +34,15 @@ const ManageRoom = () => {
     setFormData((prev) => ({ ...prev, imageFiles: Array.from(e.target.files) }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (editingId) {
-      dispatch(editRoom({ id: editingId, updatedData: formData, imageFiles: formData.imageFiles }));
+      await dispatch(editRoom({ id: editingId, updatedData: formData, imageFiles: formData.imageFiles }));
     } else {
-      dispatch(addRoom({ newRoomData: formData, imageFiles: formData.imageFiles }));
+      await dispatch(addRoom(formData));
     }
+
     setFormData({
       name: '',
       description: '',
@@ -148,7 +150,6 @@ const ManageRoom = () => {
               name="amenities"
               value={formData.amenities}
               onChange={handleInputChange}
-              required
               readOnly
             />
           </Col>
@@ -163,18 +164,19 @@ const ManageRoom = () => {
               onChange={handleInputChange}
               required
             >
-              <option value="">Select Room Type</option>
+              <option value="">Select...</option>
               <option value="Standard">Standard</option>
               <option value="Deluxe">Deluxe</option>
               <option value="Suite">Suite</option>
             </Form.Control>
           </Col>
         </Form.Group>
-        <Form.Group as={Row} controlId="formImages">
+        <Form.Group as={Row} controlId="formImageFiles">
           <Form.Label column sm={2}>Images</Form.Label>
           <Col sm={10}>
             <Form.Control
               type="file"
+              name="imageFiles"
               multiple
               onChange={handleFileChange}
             />
@@ -184,21 +186,22 @@ const ManageRoom = () => {
           {editingId ? 'Update Room' : 'Add Room'}
         </Button>
       </Form>
-      <h2>Existing Rooms</h2>
+
       {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
       <ul>
         {rooms.map((room) => (
           <li key={room.id}>
             <h3>{room.name}</h3>
             <p>{room.description}</p>
             <p>Capacity: {room.capacity}</p>
-            <p>Price: ${room.price}</p>
+            <p>Price: R{room.price}</p>
             <p>Amenities: {room.amenities}</p>
-            <p>Room Type: {room.roomType}</p>
+            <p>Type: {room.roomType}</p>
             {room.imageUrls && room.imageUrls.map((url, index) => (
-              <img key={index} src={url} alt={`Room image ${index}`} width="100" />
+              <img key={index} src={url} alt="Room" width="100" />
             ))}
-            <Button variant="warning" onClick={() => handleEdit(room)}>Edit</Button>
+            <Button variant="info" onClick={() => handleEdit(room)}>Edit</Button>
             <Button variant="danger" onClick={() => handleDelete(room.id)}>Delete</Button>
           </li>
         ))}
