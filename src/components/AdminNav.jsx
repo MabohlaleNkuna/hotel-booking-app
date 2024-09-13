@@ -23,6 +23,11 @@ const AdminNav = () => (
     <StyledLink to="/admin/dashboard">Admin Dashboard</StyledLink>
     <StyledLink to="/manage-accommodations">Manage Accommodations</StyledLink>
     <StyledLink to="/manage-rooms">Manage Rooms</StyledLink>
+    <StyledLink to="/manage-bookings">Manage Bookings</StyledLink>
+    <StyledLink to="/manage-users">Manage Users</StyledLink>
+    <StyledLink to="/manage-reviews">Manage Reviews</StyledLink>
+    <StyledLink to="/register">Register</StyledLink>
+    <StyledLink to="/login">Login</StyledLink>
   </Nav>
 );
 

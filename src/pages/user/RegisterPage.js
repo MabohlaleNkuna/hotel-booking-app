@@ -1,34 +1,52 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerUser } from '../../redux/authSlice';
-import AuthForm from '../../components/AuthForm'; 
+import { registerUser } from '../redux/authSlice';
 
 const RegisterPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
   const dispatch = useDispatch();
-  const { error } = useSelector((state) => state.auth);
+  const { loading, error, success } = useSelector((state) => state.auth);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    phone: '',
+  });
 
-  const handleRegister = (e) => {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(registerUser({ email, password }))
-      .then(() => setSuccessMessage('Registered successfully!'))
-      .catch(() => setSuccessMessage(''));
+    dispatch(registerUser(formData));
   };
 
   return (
-    <AuthForm
-      title="Register"
-      email={email}
-      setEmail={setEmail}
-      password={password}
-      setPassword={setPassword}
-      onSubmit={handleRegister}
-      buttonText="Register"
-      error={error}
-      successMessage={successMessage}
-    />
+    <div>
+      <h2>Register</h2>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Name:
+          <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} required />
+        </label>
+        <label>
+          Email:
+          <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
+        </label>
+        <label>
+          Password:
+          <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
+        </label>
+        <label>
+          Phone:
+          <input type="text" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} required />
+        </label>
+        <button type="submit" disabled={loading}>Register</button>
+      </form>
+      {loading && <p>Loading...</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {success && <p style={{ color: 'green' }}>{success}</p>}
+    </div>
   );
 };
 
