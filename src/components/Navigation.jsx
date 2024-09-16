@@ -68,26 +68,6 @@ const Navigation = () => {
           <>
             <li style={liStyles}>
               <Link
-                to="/accommodation-details"
-                style={{ ...linkStyles, ...(location.pathname === '/accommodation-details' ? linkActiveStyles : {}) }}
-                onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
-                onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
-              >
-                Accommodation Details
-              </Link>
-            </li>
-            <li style={liStyles}>
-              <Link
-                to="/booking-confirmation"
-                style={{ ...linkStyles, ...(location.pathname === '/booking-confirmation' ? linkActiveStyles : {}) }}
-                onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
-                onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
-              >
-                Booking Confirmation
-              </Link>
-            </li>
-            <li style={liStyles}>
-              <Link
                 to="/search-results"
                 style={{ ...linkStyles, ...(location.pathname === '/search-results' ? linkActiveStyles : {}) }}
                 onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
@@ -132,8 +112,8 @@ const Navigation = () => {
           <>
             <li style={liStyles}>
               <Link
-                to="/admin/dashboard"
-                style={{ ...linkStyles, ...(location.pathname === '/admin/dashboard' ? linkActiveStyles : {}) }}
+                to="/admin"
+                style={{ ...linkStyles, ...(location.pathname === '/admin' ? linkActiveStyles : {}) }}
                 onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
                 onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
               >
@@ -152,15 +132,24 @@ const Navigation = () => {
             </li>
             <li style={liStyles}>
               <Link
-                to="/admin/manage-reservations"
-                style={{ ...linkStyles, ...(location.pathname === '/admin/manage-reservations' ? linkActiveStyles : {}) }}
+                to="/admin/manage-bookings"
+                style={{ ...linkStyles, ...(location.pathname === '/admin/manage-bookings' ? linkActiveStyles : {}) }}
                 onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
                 onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
               >
-                Manage Reservations
+                Manage Bookings
               </Link>
             </li>
-            {/* Add more admin-specific links as needed */}
+            <li style={liStyles}>
+              <Link
+                to="/admin/manage-rooms"
+                style={{ ...linkStyles, ...(location.pathname === '/admin/manage-rooms' ? linkActiveStyles : {}) }}
+                onMouseOver={(e) => (e.target.style.backgroundColor = linkHoverStyles.backgroundColor)}
+                onMouseOut={(e) => (e.target.style.backgroundColor = 'transparent')}
+              >
+                Manage Rooms
+              </Link>
+            </li>
           </>
         )}
         <li style={liStyles}>

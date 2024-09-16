@@ -1,6 +1,6 @@
 import React from 'react';
 import './AuthForm.css'; 
-import Buttons from '../components/Buttons'; 
+import Buttons from './AccomodationDetail'; 
 
 const AuthForm = ({ title, email, setEmail, password, setPassword, onSubmit, buttonText, error, successMessage }) => (
   <div className="auth-form">
