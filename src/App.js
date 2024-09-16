@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import RoomDetails from './components/RoomDetals.jsx';
-import UserHomePage from './pages/user/UserHomePage.js';
+import UserHomePage from './pages/user/UserHomepage.js';
 
 function App() {
   return (

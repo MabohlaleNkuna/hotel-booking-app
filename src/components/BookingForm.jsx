@@ -32,24 +32,30 @@ const BookingForm = ({ room, onClose }) => {
   };
 
   return (
-    <div className="booking-form">
-      <h2>Book {room.name}</h2>
+    <div style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '10px', maxWidth: '400px', margin: '0 auto', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+      <h2 style={{ color: '#004AAD' }}>Book {room.name}</h2>
       <form onSubmit={handleSubmit}>
-        <label>
+        <label style={{ display: 'block', marginBottom: '10px' }}>
           Check-in Date:
-          <input type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} required />
+          <input type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} required style={{ width: '100%', padding: '8px', margin: '5px 0', borderRadius: '5px', border: '1px solid #004AAD' }} />
         </label>
-        <label>
+        <label style={{ display: 'block', marginBottom: '10px' }}>
           Check-out Date:
-          <input type="date" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} required />
+          <input type="date" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} required style={{ width: '100%', padding: '8px', margin: '5px 0', borderRadius: '5px', border: '1px solid #004AAD' }} />
         </label>
-        <label>
+        <label style={{ display: 'block', marginBottom: '20px' }}>
           Payment Details:
-          <CardElement />
+          <div style={{ padding: '10px', border: '1px solid #004AAD', borderRadius: '5px' }}>
+            <CardElement />
+          </div>
         </label>
-        {paymentError && <p>{paymentError}</p>}
-        <button type="submit" disabled={!stripe}>Submit</button>
-        <button type="button" onClick={onClose}>Close</button>
+        {paymentError && <p style={{ color: 'red' }}>{paymentError}</p>}
+        <button type="submit" disabled={!stripe} style={{ backgroundColor: '#004AAD', color: '#fff', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer', marginRight: '10px' }}>
+          Submit
+        </button>
+        <button type="button" onClick={onClose} style={{ backgroundColor: '#ccc', color: '#333', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+          Close
+        </button>
       </form>
     </div>
   );
