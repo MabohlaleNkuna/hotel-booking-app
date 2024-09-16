@@ -63,7 +63,8 @@ const RoomDetailsPage = () => {
       <p style={styles.text}>Capacity: {room.capacity}</p>
       <p style={styles.text}>Price: R{room.price}</p>
       <p style={styles.text}>Amenities: {Array.isArray(room.amenities) ? room.amenities.join(', ') : 'N/A'}</p>
-  
+      <p style={styles.text}>Room Type: {room.roomType}</p> {/* Added Room Type */}
+
       <button style={styles.button} onClick={handleBookRoom}>Book Now</button>
       <button style={styles.button} onClick={handleReviewRoom}>Leave a Review</button>
 
@@ -78,9 +79,9 @@ const RoomDetailsPage = () => {
       {/* Reviews section */}
       <div style={styles.reviewsSection}>
         <h2 style={styles.reviewsHeading}>Reviews</h2>
-        <a href="#" onClick={toggleReviews} style={styles.reviewToggleLink}>
+        <span onClick={toggleReviews} style={styles.reviewToggleLink} role="button" tabIndex="0">
           {showReviews ? 'Hide Reviews' : 'Show Reviews'}
-        </a>
+        </span>
         {showReviews && (
           <div>
             {reviews.length > 0 ? (
@@ -139,13 +140,12 @@ const styles = {
     borderRadius: '5px',
     cursor: 'pointer',
     transition: 'background-color 0.3s ease',
-    marginLeft: '5px', 
+    marginLeft: '5px',
   },
   review: {
     padding: '10px',
     borderBottom: '1px solid #ccc',
     marginBottom: '10px',
-    
   },
   reviewToggleLink: {
     color: '#004aad',
@@ -154,14 +154,14 @@ const styles = {
     fontSize: '16px',
     marginBottom: '20px',
     display: 'block',
-    marginLeft: '5px', 
+    marginLeft: '5px',
   },
   reviewsSection: {
     marginTop: '20px',
   },
   reviewsHeading: {
     color: '#004aad',
-    marginLeft: '5px', 
+    marginLeft: '5px',
     marginBottom: '10px',
   },
 };

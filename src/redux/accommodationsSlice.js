@@ -1,44 +1,45 @@
-// src/redux/accommodationsSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebaseConfig.js'; 
 
+const uploadImages = async (imageFiles, folder) => {
+  const imageURLs = await Promise.all(imageFiles.map(async (file) => {
+    const storageRef = ref(storage, `${folder}/${file.name}`);
+    await uploadBytes(storageRef, file);
+    return getDownloadURL(storageRef);
+  }));
+  return imageURLs;
+};
 
 export const fetchAccommodations = createAsyncThunk('accommodations/fetchAccommodations', async () => {
   const snapshot = await getDocs(collection(db, 'accommodations'));
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 });
 
-export const addAccommodation = createAsyncThunk('accommodations/addAccommodation', async ({ newAccommodationData, imageFile }) => {
-  let imageUrl = '';
-  if (imageFile) {
-    const storageRef = ref(storage, `images/${imageFile.name}`);
-    await uploadBytes(storageRef, imageFile);
-    imageUrl = await getDownloadURL(storageRef);
-  }
+export const addAccommodation = createAsyncThunk('accommodations/addAccommodation', async ({ newAccommodationData, imageFiles }) => {
+  const imageURLs = await uploadImages(imageFiles, 'accommodations');
+  const [mainImage, ...galleryImages] = imageURLs;
 
   const docRef = await addDoc(collection(db, 'accommodations'), {
     ...newAccommodationData,
-    imageUrl,
+    mainImage,
+    galleryImages
   });
-  return { id: docRef.id, ...newAccommodationData, imageUrl };
+  return { id: docRef.id, ...newAccommodationData, mainImage, galleryImages };
 });
 
-export const editAccommodation = createAsyncThunk('accommodations/editAccommodation', async ({ id, updatedData, imageFile }) => {
-  let imageUrl = updatedData.imageUrl;
-  if (imageFile) {
-    const storageRef = ref(storage, `images/${imageFile.name}`);
-    await uploadBytes(storageRef, imageFile);
-    imageUrl = await getDownloadURL(storageRef);
-  }
+export const editAccommodation = createAsyncThunk('accommodations/editAccommodation', async ({ id, updatedData, imageFiles }) => {
+  const imageURLs = imageFiles.length ? await uploadImages(imageFiles, 'accommodations') : [];
+  const [mainImage, ...galleryImages] = imageURLs;
 
   const docRef = doc(db, 'accommodations', id);
   await updateDoc(docRef, {
     ...updatedData,
-    imageUrl,
+    mainImage: mainImage || updatedData.mainImage,
+    galleryImages: galleryImages.length ? galleryImages : updatedData.galleryImages
   });
-  return { id, updatedData: { ...updatedData, imageUrl } };
+  return { id, updatedData: { ...updatedData, mainImage, galleryImages } };
 });
 
 export const removeAccommodation = createAsyncThunk('accommodations/removeAccommodation', async (id) => {
@@ -47,7 +48,6 @@ export const removeAccommodation = createAsyncThunk('accommodations/removeAccomm
   return id;
 });
 
-// Slice Definition
 const accommodationsSlice = createSlice({
   name: 'accommodations',
   initialState: {
@@ -55,7 +55,6 @@ const accommodationsSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchAccommodations.pending, (state) => {
@@ -105,7 +104,7 @@ const accommodationsSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       });
-  },
+  }
 });
 
 export default accommodationsSlice.reducer;

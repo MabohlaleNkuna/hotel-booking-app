@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import { fetchAccommodations } from '../../redux/accommodationsSlice.js';
 import { fetchRooms } from '../../redux/roomSlice.js';
 
 const UserHomePage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
   const { list: accommodations, loading: accommodationsLoading, error: accommodationsError } = useSelector((state) => state.accommodations);
   const { list: rooms, loading: roomsLoading, error: roomsError } = useSelector((state) => state.rooms);
 
@@ -19,50 +19,70 @@ const UserHomePage = () => {
   if (accommodationsError || roomsError) return <p>Error: {accommodationsError || roomsError}</p>;
 
   const handleViewDetails = (roomId) => {
-    navigate(`/room/${roomId}`); // Navigate to RoomDetailsPage with room ID
+    navigate(`/room/${roomId}`);
   };
 
   return (
-    <div>
-      <h1>Welcome to Botlhale Hotel</h1>
+    <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f0f8ff', color: '#004AAD', padding: '20px' }}>
+      <h1 style={{ textAlign: 'center', fontSize: '36px', marginBottom: '20px' }}>Welcome to Botlhale Hotel</h1>
       
-      <section>
-        <h2>Available Accommodations</h2>
-        <ul>
+      <section style={{ marginBottom: '40px', padding: '20px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+        <h2 style={{ fontSize: '28px', marginBottom: '20px' }}>Available Accommodations</h2>
+        <ul style={{ listStyle: 'none', padding: '0' }}>
           {accommodations.map(accommodation => (
-            <li key={accommodation.id}>
-              <h3>{accommodation.name}</h3>
-              <p>{accommodation.description}</p>
-              <p>Capacity: {accommodation.capacity}</p>
-              <p>
-                Amenities: {Array.isArray(accommodation.amenities) ? accommodation.amenities.join(', ') : 'N/A'}
-              </p>
-              {accommodation.imageUrls && accommodation.imageUrls.map((url, index) => (
-                <img key={index} src={url} alt={`${accommodation.name}`} width="200" />
-              ))}
+            <li key={accommodation.id} style={{ marginBottom: '40px', padding: '20px', border: '1px solid #004AAD', borderRadius: '8px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
+                {accommodation.imageUrls && accommodation.imageUrls[0] && (
+                  <img src={accommodation.imageUrls[0]} alt={accommodation.name} width="300" style={{ borderRadius: '8px', marginBottom: '20px' }} />
+                )}
+                <h3 style={{ fontSize: '24px', marginBottom: '10px' }}>{accommodation.name}</h3>
+                <p style={{ fontSize: '16px', textAlign: 'center', marginBottom: '10px' }}>{accommodation.description}</p>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+                <p><strong>Capacity:</strong> {accommodation.capacity}</p>
+                <p><strong>Amenities:</strong> {Array.isArray(accommodation.amenities) ? accommodation.amenities.join(', ') : 'N/A'}</p>
+              </div>
             </li>
           ))}
         </ul>
       </section>
       
-      <section>
-        <h2>Available Rooms</h2>
-        <ul>
+      <section style={{ marginBottom: '40px', padding: '20px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+        <h2 style={{ fontSize: '28px', marginBottom: '20px' }}>Available Rooms</h2>
+        <ul style={{ 
+          listStyle: 'none', 
+          padding: '0', 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(3, 1fr)', 
+          gap: '20px' 
+        }}>
           {rooms.map(room => (
-            <li key={room.id}>
-              <h3>{room.name}</h3>
-              {room.imageUrls && room.imageUrls.map((url, index) => (
-                <img key={index} src={url} alt={`${room.name}`} width="200" />
-              ))}
-              <button onClick={() => handleViewDetails(room.id)}>View Details</button>
+            <li key={room.id} style={{ padding: '20px', border: '1px solid #004AAD', borderRadius: '8px' }}>
+              <h3 style={{ fontSize: '24px', marginBottom: '10px' }}>{room.name}</h3>
+              {room.imageUrls && room.imageUrls[0] && (
+                <img src={room.imageUrls[0]} alt={room.name} width="200" style={{ borderRadius: '8px', marginBottom: '10px' }} />
+              )}
+              <button 
+                onClick={() => handleViewDetails(room.id)} 
+                style={{
+                  backgroundColor: '#004AAD', 
+                  color: '#fff', 
+                  padding: '10px 20px', 
+                  border: 'none', 
+                  borderRadius: '8px', 
+                  cursor: 'pointer'
+                }}
+              >
+                View Details
+              </button>
             </li>
           ))}
         </ul>
       </section>
       
-      <section>
-        <h2>Upcoming Features</h2>
-        <p>Stay tuned for more updates on our platform, including user reviews, booking options, and more!</p>
+      <section style={{ padding: '20px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+        <h2 style={{ fontSize: '28px', marginBottom: '20px' }}>Upcoming Features</h2>
+        <p style={{ fontSize: '16px' }}>Stay tuned for more updates on our platform, including user reviews, booking options, and more!</p>
       </section>
     </div>
   );
