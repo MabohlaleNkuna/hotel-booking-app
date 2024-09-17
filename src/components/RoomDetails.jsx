@@ -14,16 +14,13 @@ const RoomDetailsPage = () => {
 
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
-  const [showReviews, setShowReviews] = useState(false); // State to manage review visibility
+  const [showReviews, setShowReviews] = useState(false);
+  const [bookingSummary, setBookingSummary] = useState(null);
 
   useEffect(() => {
     dispatch(fetchRoomById(id));
     dispatch(fetchReviewsForRoom(id));
   }, [dispatch, id]);
-
-  useEffect(() => {
-    console.log('Room:', room);
-  }, [room]);
 
   if (loading || reviewsLoading) return <p>Loading...</p>;
   if (error || reviewsError) return <p>Error: {error || reviewsError}</p>;
@@ -49,6 +46,11 @@ const RoomDetailsPage = () => {
     setShowReviews(!showReviews);
   };
 
+  const handleBookingSuccess = (summary) => {
+    setBookingSummary(summary);
+    setShowBookingForm(false);
+  };
+
   return (
     <div style={styles.container}>
       <h1 style={styles.heading}>{room.name}</h1>
@@ -63,20 +65,31 @@ const RoomDetailsPage = () => {
       <p style={styles.text}>Capacity: {room.capacity}</p>
       <p style={styles.text}>Price: R{room.price}</p>
       <p style={styles.text}>Amenities: {Array.isArray(room.amenities) ? room.amenities.join(', ') : 'N/A'}</p>
-      <p style={styles.text}>Room Type: {room.roomType}</p> {/* Added Room Type */}
+      <p style={styles.text}>Room Type: {room.roomType}</p>
 
       <button style={styles.button} onClick={handleBookRoom}>Book Now</button>
       <button style={styles.button} onClick={handleReviewRoom}>Leave a Review</button>
 
       {showBookingForm && (
-        <BookingForm room={room} onClose={handleCloseBooking} />
+        <BookingForm room={room} onClose={handleCloseBooking} onBookingSuccess={handleBookingSuccess} />
       )}
 
       {showReviewForm && (
         <ReviewForm room={room} onClose={handleCloseReview} />
       )}
 
-      {/* Reviews section */}
+      {bookingSummary && (
+        <div style={styles.bookingSummary}>
+          <h2 style={styles.summaryHeading}>Booking Summary</h2>
+          <p style={styles.text}><strong>Room:</strong> {bookingSummary.room}</p>
+          <p style={styles.text}><strong>Check-in Date:</strong> {bookingSummary.checkIn}</p>
+          <p style={styles.text}><strong>Check-out Date:</strong> {bookingSummary.checkOut}</p>
+          <p style={styles.text}><strong>Total Amount:</strong> R{bookingSummary.amount}</p>
+          <p style={styles.text}><strong>Payment Method:</strong> {bookingSummary.paymentMethod}</p>
+          <p style={styles.text}><strong>Date:</strong> {bookingSummary.date}</p>
+        </div>
+      )}
+
       <div style={styles.reviewsSection}>
         <h2 style={styles.reviewsHeading}>Reviews</h2>
         <span onClick={toggleReviews} style={styles.reviewToggleLink} role="button" tabIndex="0">
@@ -140,29 +153,36 @@ const styles = {
     borderRadius: '5px',
     cursor: 'pointer',
     transition: 'background-color 0.3s ease',
-    marginLeft: '5px',
   },
-  review: {
-    padding: '10px',
-    borderBottom: '1px solid #ccc',
-    marginBottom: '10px',
+  bookingSummary: {
+    marginTop: '20px',
+    padding: '15px',
+    borderRadius: '5px',
+    backgroundColor: '#fff',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
-  reviewToggleLink: {
+  summaryHeading: {
     color: '#004aad',
-    textDecoration: 'none',
-    cursor: 'pointer',
-    fontSize: '16px',
-    marginBottom: '20px',
-    display: 'block',
-    marginLeft: '5px',
+    marginBottom: '15px',
   },
   reviewsSection: {
-    marginTop: '20px',
+    marginTop: '30px',
   },
   reviewsHeading: {
     color: '#004aad',
-    marginLeft: '5px',
     marginBottom: '10px',
+  },
+  review: {
+    marginBottom: '15px',
+    padding: '10px',
+    borderRadius: '5px',
+    backgroundColor: '#fff',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+  },
+  reviewToggleLink: {
+    color: '#004aad',
+    cursor: 'pointer',
+    textDecoration: 'underline',
   },
 };
 
