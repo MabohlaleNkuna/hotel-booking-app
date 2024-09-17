@@ -90,12 +90,91 @@ const ManageRoom = () => {
     setFormData((prev) => ({ ...prev, amenities }));
   };
 
+  // Inline styles
+  const styles = {
+    container: {
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif',
+      backgroundColor: '#f9f9f9',
+    },
+    header: {
+      marginBottom: '20px',
+      color: '#004AAD',
+    },
+    formGroup: {
+      marginBottom: '15px',
+    },
+    formLabel: {
+      color: '#004AAD',
+      fontWeight: 'bold',
+    },
+    formControl: {
+      border: '1px solid #004AAD',
+      borderRadius: '5px',
+    },
+    formControlReadonly: {
+      backgroundColor: '#e9ecef',
+    },
+    submitButton: {
+      backgroundColor: '#004AAD',
+      border: 'none',
+      color: 'white',
+      padding: '10px 20px',
+      borderRadius: '5px',
+      cursor: 'pointer',
+    },
+    submitButtonHover: {
+      backgroundColor: '#003d7a',
+    },
+    imagePreview: {
+      marginTop: '10px',
+    },
+    imagePreviewImg: {
+      marginRight: '10px',
+      borderRadius: '5px',
+    },
+    errorMessage: {
+      color: '#FF0000',
+    },
+    loadingMessage: {
+      color: '#004AAD',
+    },
+    roomList: {
+      marginTop: '20px',
+    },
+    roomItem: {
+      borderBottom: '1px solid #ddd',
+      padding: '10px 0',
+      marginBottom: '10px',
+    },
+    roomItemTitle: {
+      color: '#004AAD',
+    },
+    editButton: {
+      backgroundColor: '#007bff',
+      border: 'none',
+      color: 'white',
+      padding: '5px 10px',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      marginRight: '5px',
+    },
+    deleteButton: {
+      backgroundColor: '#dc3545',
+      border: 'none',
+      color: 'white',
+      padding: '5px 10px',
+      borderRadius: '5px',
+      cursor: 'pointer',
+    },
+  };
+
   return (
-    <div>
-      <h1>Manage Rooms</h1>
+    <div style={styles.container}>
+      <h1 style={styles.header}>Manage Rooms</h1>
       <Form onSubmit={handleSubmit}>
-        <Form.Group as={Row} controlId="formName">
-          <Form.Label column sm={2}>Name</Form.Label>
+        <Form.Group as={Row} style={styles.formGroup}>
+          <Form.Label column sm={2} style={styles.formLabel}>Name</Form.Label>
           <Col sm={10}>
             <Form.Control
               type="text"
@@ -103,11 +182,12 @@ const ManageRoom = () => {
               value={formData.name}
               onChange={handleInputChange}
               required
+              style={styles.formControl}
             />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} controlId="formDescription">
-          <Form.Label column sm={2}>Description</Form.Label>
+        <Form.Group as={Row} style={styles.formGroup}>
+          <Form.Label column sm={2} style={styles.formLabel}>Description</Form.Label>
           <Col sm={10}>
             <Form.Control
               as="textarea"
@@ -115,11 +195,12 @@ const ManageRoom = () => {
               value={formData.description}
               onChange={handleInputChange}
               required
+              style={{ ...styles.formControl, ...styles.formControlReadonly }}
             />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} controlId="formCapacity">
-          <Form.Label column sm={2}>Capacity</Form.Label>
+        <Form.Group as={Row} style={styles.formGroup}>
+          <Form.Label column sm={2} style={styles.formLabel}>Capacity</Form.Label>
           <Col sm={10}>
             <Form.Control
               type="number"
@@ -127,11 +208,12 @@ const ManageRoom = () => {
               value={formData.capacity}
               onChange={handleInputChange}
               required
+              style={styles.formControl}
             />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} controlId="formPrice">
-          <Form.Label column sm={2}>Price</Form.Label>
+        <Form.Group as={Row} style={styles.formGroup}>
+          <Form.Label column sm={2} style={styles.formLabel}>Price</Form.Label>
           <Col sm={10}>
             <Form.Control
               type="number"
@@ -139,11 +221,12 @@ const ManageRoom = () => {
               value={formData.price}
               onChange={handleInputChange}
               required
+              style={styles.formControl}
             />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} controlId="formAmenities">
-          <Form.Label column sm={2}>Amenities</Form.Label>
+        <Form.Group as={Row} style={styles.formGroup}>
+          <Form.Label column sm={2} style={styles.formLabel}>Amenities</Form.Label>
           <Col sm={10}>
             <Form.Control
               type="text"
@@ -151,11 +234,12 @@ const ManageRoom = () => {
               value={formData.amenities}
               onChange={handleInputChange}
               readOnly
+              style={{ ...styles.formControl, ...styles.formControlReadonly }}
             />
           </Col>
         </Form.Group>
-        <Form.Group as={Row} controlId="formRoomType">
-          <Form.Label column sm={2}>Room Type</Form.Label>
+        <Form.Group as={Row} style={styles.formGroup}>
+          <Form.Label column sm={2} style={styles.formLabel}>Room Type</Form.Label>
           <Col sm={10}>
             <Form.Control
               as="select"
@@ -163,6 +247,7 @@ const ManageRoom = () => {
               value={formData.roomType}
               onChange={handleInputChange}
               required
+              style={styles.formControl}
             >
               <option value="">Select...</option>
               <option value="Standard">Standard</option>
@@ -171,41 +256,62 @@ const ManageRoom = () => {
             </Form.Control>
           </Col>
         </Form.Group>
-        <Form.Group as={Row} controlId="formImageFiles">
-          <Form.Label column sm={2}>Images</Form.Label>
+        <Form.Group as={Row} style={styles.formGroup}>
+          <Form.Label column sm={2} style={styles.formLabel}>Images</Form.Label>
           <Col sm={10}>
             <Form.Control
               type="file"
               name="imageFiles"
               multiple
               onChange={handleFileChange}
+              style={styles.formControl}
             />
           </Col>
         </Form.Group>
-        <Button variant="primary" type="submit">
+        <Button
+          variant="primary"
+          type="submit"
+          style={styles.submitButton}
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = styles.submitButtonHover.backgroundColor}
+          onMouseOut={(e) => e.currentTarget.style.backgroundColor = styles.submitButton.backgroundColor}
+        >
           {editingId ? 'Update Room' : 'Add Room'}
         </Button>
       </Form>
 
-      {loading && <p>Loading...</p>}
-      {error && <p>Error: {error}</p>}
-      <ul>
+      {loading && <p style={styles.loadingMessage}>Loading...</p>}
+      {error && <p style={styles.errorMessage}>Error: {error}</p>}
+      <div style={styles.roomList}>
         {rooms.map((room) => (
-          <li key={room.id}>
-            <h3>{room.name}</h3>
+          <div key={room.id} style={styles.roomItem}>
+            <h3 style={styles.roomItemTitle}>{room.name}</h3>
             <p>{room.description}</p>
             <p>Capacity: {room.capacity}</p>
             <p>Price: R{room.price}</p>
             <p>Amenities: {room.amenities}</p>
             <p>Type: {room.roomType}</p>
-            {room.imageUrls && room.imageUrls.map((url, index) => (
-              <img key={index} src={url} alt="Room" width="100" />
-            ))}
-            <Button variant="info" onClick={() => handleEdit(room)}>Edit</Button>
-            <Button variant="danger" onClick={() => handleDelete(room.id)}>Delete</Button>
-          </li>
+            {room.imageUrls && room.imageUrls.length > 0 && (
+              <div style={styles.imagePreview}>
+                {room.imageUrls.map((url, index) => (
+                  <img key={index} src={url} alt={`Room ${room.name}`} style={styles.imagePreviewImg} />
+                ))}
+              </div>
+            )}
+            <Button
+              style={styles.editButton}
+              onClick={() => handleEdit(room)}
+            >
+              Edit
+            </Button>
+            <Button
+              style={styles.deleteButton}
+              onClick={() => handleDelete(room.id)}
+            >
+              Delete
+            </Button>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

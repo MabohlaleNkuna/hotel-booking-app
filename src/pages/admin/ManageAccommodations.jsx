@@ -26,13 +26,53 @@ const ManageAccommodations = () => {
   });
   const [imageFiles, setImageFiles] = useState([]);
 
-  // Fetch accommodations when component mounts
   useEffect(() => {
     dispatch(fetchAccommodations());
   }, [dispatch]);
 
+  useEffect(() => {
+    // Ensure formData is updated when currentAccommodation changes
+    if (currentAccommodation) {
+      setFormData({
+        name: currentAccommodation.name,
+        description: currentAccommodation.description,
+        address: currentAccommodation.address,
+        mapLocation: currentAccommodation.mapLocation || { latitude: 0, longitude: 0 },
+        starRating: currentAccommodation.starRating || 0,
+        facilities: currentAccommodation.facilities || [],
+        policies: currentAccommodation.policies || '',
+        mainImage: currentAccommodation.mainImage || '',
+        galleryImages: currentAccommodation.galleryImages || []
+      });
+    } else {
+      setFormData({
+        name: '',
+        description: '',
+        address: '',
+        mapLocation: { latitude: 0, longitude: 0 },
+        starRating: 0,
+        facilities: [],
+        policies: '',
+        mainImage: '',
+        galleryImages: []
+      });
+    }
+  }, [currentAccommodation]);
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === 'latitude' || name === 'longitude') {
+      setFormData({
+        ...formData,
+        mapLocation: {
+          ...formData.mapLocation,
+          [name]: parseFloat(value)
+        }
+      });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleImageChange = (e) => {
@@ -53,12 +93,13 @@ const ManageAccommodations = () => {
 
     const newAccommodationData = { ...formData, mainImage, galleryImages };
 
-    if (isEditing) {
+    if (isEditing && currentAccommodation) {
       dispatch(editAccommodation({ id: currentAccommodation.id, updatedData: newAccommodationData, imageFiles }));
     } else {
       dispatch(addAccommodation({ newAccommodationData, imageFiles }));
     }
 
+    // Clear form and set state back to default
     setIsEditing(false);
     setCurrentAccommodation(null);
     setFormData({
@@ -77,7 +118,6 @@ const ManageAccommodations = () => {
 
   const handleEdit = (accommodation) => {
     setCurrentAccommodation(accommodation);
-    setFormData(accommodation);
     setIsEditing(true);
   };
 
@@ -88,7 +128,7 @@ const ManageAccommodations = () => {
   return (
     <div style={styles.container}>
       <h2 style={styles.header}>Manage Accommodations</h2>
-      <button 
+      <button
         onClick={() => {
           setIsEditing(true);
           setCurrentAccommodation(null);
@@ -111,34 +151,51 @@ const ManageAccommodations = () => {
 
       {isEditing && (
         <form onSubmit={handleSubmit} style={styles.form}>
-          <input 
-            type="text" 
-            name="name" 
-            value={formData.name} 
-            onChange={handleChange} 
-            placeholder="Hotel Name" 
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Hotel Name"
             style={styles.input}
           />
-          <input 
-            type="text" 
-            name="description" 
-            value={formData.description} 
-            onChange={handleChange} 
-            placeholder="Description" 
+          <input
+            type="text"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            placeholder="Description"
             style={styles.input}
           />
-          <input 
-            type="text" 
-            name="address" 
-            value={formData.address} 
-            onChange={handleChange} 
-            placeholder="Address" 
+          <input
+            type="text"
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            placeholder="Address"
             style={styles.input}
           />
-          <input 
-            type="file" 
-            multiple 
-            onChange={handleImageChange} 
+          {/* Latitude and Longitude Input Fields */}
+          <input
+            type="number"
+            name="latitude"
+            value={formData.mapLocation.latitude}
+            onChange={handleChange}
+            placeholder="Latitude"
+            style={styles.input}
+          />
+          <input
+            type="number"
+            name="longitude"
+            value={formData.mapLocation.longitude}
+            onChange={handleChange}
+            placeholder="Longitude"
+            style={styles.input}
+          />
+          <input
+            type="file"
+            multiple
+            onChange={handleImageChange}
             style={styles.fileInput}
           />
           <button type="submit" style={styles.submitButton}>
@@ -155,6 +212,28 @@ const ManageAccommodations = () => {
           <div key={accommodation.id} style={styles.accommodationItem}>
             <h3>{accommodation.name}</h3>
             <p>{accommodation.description}</p>
+            {accommodation.mainImage && (
+              <img
+                src={accommodation.mainImage}
+                alt={`Main image of ${accommodation.name}`}
+                style={styles.image}
+              />
+            )}
+            <p><strong>Address:</strong> {accommodation.address}</p>
+            <p><strong>Location:</strong> Latitude {accommodation.mapLocation.latitude}, Longitude {accommodation.mapLocation.longitude}</p>
+  
+            {accommodation.galleryImages.length > 0 && (
+              <div style={styles.gallery}>
+                {accommodation.galleryImages.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`${accommodation.name} gallery image ${index + 1}`}
+                    style={styles.galleryImage}
+                  />
+                ))}
+              </div>
+            )}
             <button onClick={() => handleEdit(accommodation)} style={styles.button}>
               Edit
             </button>
@@ -179,7 +258,7 @@ const styles = {
     color: '#004AAD'
   },
   button: {
-    backgroundColor: '#F4C561',
+    backgroundColor: 'blue',
     border: 'none',
     padding: '10px 20px',
     margin: '5px',
@@ -221,6 +300,21 @@ const styles = {
   accommodationItem: {
     borderBottom: '1px solid #CCC',
     padding: '10px 0'
+  },
+  image: {
+    width: '100px',
+    height: '100px',
+    objectFit: 'cover',
+    marginBottom: '10px'
+  },
+  gallery: {
+    marginTop: '10px'
+  },
+  galleryImage: {
+    width: '100px',
+    height: '100px',
+    objectFit: 'cover',
+    marginRight: '5px'
   }
 };
 

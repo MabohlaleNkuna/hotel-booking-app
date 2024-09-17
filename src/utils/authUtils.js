@@ -1,5 +1,4 @@
-// src/utils/authUtils.js
-import { db } from '../firebaseConfig.js'; // Import Firestore
+import { db } from '../firebaseConfig.js';
 import { doc, getDoc } from 'firebase/firestore';
 
 export const checkAdminStatus = async (user) => {
@@ -9,12 +8,13 @@ export const checkAdminStatus = async (user) => {
     const userDoc = await getDoc(doc(db, 'users', user.uid));
     if (userDoc.exists()) {
       const userData = userDoc.data();
-      return userData.role === 'admin'; // Adjust based on your Firestore structure
+      return userData.role === 'admin'; 
     } else {
+      console.warn('User document not found in Firestore.');
       return false;
     }
   } catch (error) {
-    console.error('Error checking admin status: ', error);
+    console.error('Error checking admin status:', error);
     return false;
   }
 };
