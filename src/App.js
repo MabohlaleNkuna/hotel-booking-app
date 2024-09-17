@@ -35,7 +35,6 @@ const App = () => {
   }, []);
 
   if (loading) {
-    // Optionally add a loading spinner or message here
     return <div>Loading...</div>;
   }
 
@@ -46,7 +45,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
-        {/* Admin Routes */}
+        {/* Protected Routes */}
         <Route 
           path="/dashboard" 
           element={user && isAdmin ? (
@@ -80,11 +79,9 @@ const App = () => {
             <Navigate to="/login" />
           )}
         />
-
-        {/* User Routes */}
         <Route 
           path="/user-homepage" 
-          element={user ? (
+          element={user && !isAdmin ? (
             <>
               <UserNavbar />
               <UserHomePage />
@@ -95,7 +92,7 @@ const App = () => {
         />
         <Route 
           path="/room-details" 
-          element={user ? (
+          element={user && !isAdmin ? (
             <>
               <UserNavbar />
               <RoomDetailsPage />
