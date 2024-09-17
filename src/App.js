@@ -11,6 +11,7 @@ import ManageAccommodations from './pages/admin/ManageAccommodations.jsx';
 import ManageRoom from './pages/admin/ManageRoom.js';
 import UserHomePage from './pages/user/UserHomepage.js';
 import RoomDetails from './components/RoomDetails.jsx'; 
+import ProtectedRoute from './components/ProtectedRoute.jsx'; // Import the HOC
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -28,7 +29,6 @@ const App = () => {
         setUser(null);
         setIsAdmin(false);
       }
-      console.log(currentUser)
       setLoading(false);
     });
 
@@ -43,61 +43,101 @@ const App = () => {
     <Router>
       <Routes>
         {/* Public Routes */}
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
+        <Route 
+          path="/register" 
+          element={
+            <ProtectedRoute 
+              isAuthenticated={!!user} 
+              isAdmin={isAdmin} 
+              adminRequired={false}
+            >
+              <Register />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/login" 
+          element={
+            <ProtectedRoute 
+              isAuthenticated={!!user} 
+              isAdmin={isAdmin} 
+              adminRequired={false}
+            >
+              <Login />
+            </ProtectedRoute>
+          } 
+        />
 
-        {/* Redirect after login */}
+        {/* Protected Routes */}
         <Route 
           path="/dashboard" 
-          element={user && isAdmin ? (
-            <>
-              <AdminNavbar />
-              <AdminDashboard />
-            </>
-          ) : (
-            <Navigate to="/login" />
-          )}
+          element={
+            <ProtectedRoute 
+              isAuthenticated={!!user} 
+              isAdmin={isAdmin} 
+              adminRequired={true}
+            >
+              <>
+                <AdminNavbar />
+                <AdminDashboard />
+              </>
+            </ProtectedRoute>
+          }
         />
         <Route 
           path="/manage-accommodations" 
-          element={user && isAdmin ? (
-            <>
-              <AdminNavbar />
-              <ManageAccommodations />
-            </>
-          ) : (
-            <Navigate to="/login" />
-          )}
+          element={
+            <ProtectedRoute 
+              isAuthenticated={!!user} 
+              isAdmin={isAdmin} 
+              adminRequired={true}
+            >
+              <>
+                <AdminNavbar />
+                <ManageAccommodations />
+              </>
+            </ProtectedRoute>
+          }
         />
         <Route 
           path="/manage-rooms" 
-          element={user && isAdmin ? (
-            <>
-              <AdminNavbar />
-              <ManageRoom />
-            </>
-          ) : (
-            <Navigate to="/login" />
-          )}
+          element={
+            <ProtectedRoute 
+              isAuthenticated={!!user} 
+              isAdmin={isAdmin} 
+              adminRequired={true}
+            >
+              <>
+                <AdminNavbar />
+                <ManageRoom />
+              </>
+            </ProtectedRoute>
+          }
         />
         <Route 
           path="/user-homepage" 
-          element={user && !isAdmin ? (
-            <>
-              <UserNavbar />
-              <UserHomePage />
-            </>
-          ) : (
-            <Navigate to="/login" />
-          )}
+          element={
+            <ProtectedRoute 
+              isAuthenticated={!!user} 
+              isAdmin={isAdmin} 
+              adminRequired={false}
+            >
+              <>
+                <UserNavbar />
+                <UserHomePage />
+              </>
+            </ProtectedRoute>
+          }
         />
         <Route 
           path="/room/:id" 
-          element={<RoomDetails/>}/>
-           
+          element={<RoomDetails />} 
+        />
         <Route 
           path="/" 
-          element={user ? (isAdmin ? <Navigate to="/dashboard" /> : <Navigate to="/user-homepage" />) : <Navigate to="/login" /> }
+          element={
+            <Navigate to={user ? (isAdmin ? "/dashboard" : "/user-homepage") : "/login"} />
+          } 
         />
       </Routes>
     </Router>
