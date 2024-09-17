@@ -1,38 +1,27 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Navbar, Nav } from 'react-bootstrap';
 
 const UserNavbar = () => {
-  return (
-    <nav style={styles.navbar}>
-      <ul style={styles.navList}>
-        <li><Link to="/user-homepage" style={styles.navLink}>Home</Link></li>
-        <li><Link to="/room-details" style={styles.navLink}>Room Details</Link></li>
-        <li><Link to="/logout" style={styles.navLink}>Logout</Link></li>
-      </ul>
-    </nav>
-  );
-};
+  const navigate = useNavigate();
 
-const styles = {
-  navbar: {
-    backgroundColor: '#004aad',
-    color: '#ffffff',
-    padding: '10px',
-    borderBottom: '2px solid #003a8c',
-  },
-  navList: {
-    listStyle: 'none',
-    padding: '0',
-    margin: '0',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  navLink: {
-    color: '#ffffff',
-    textDecoration: 'none',
-    padding: '10px 20px',
-    display: 'block',
-  },
+  const handleLogout = () => {
+    // Add logout logic here (e.g., clearing tokens, localStorage, etc.)
+    navigate('/login'); // Redirect to the login page after logout
+  };
+
+  return (
+    <Navbar bg="light" expand="lg">
+      <Navbar.Brand as={Link} to="/">User Panel</Navbar.Brand>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="mr-auto">
+          <Nav.Link as={Link} to="/">Home</Nav.Link>
+          <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+        </Nav>
+      </Navbar.Collapse>
+    </Navbar>
+  );
 };
 
 export default UserNavbar;

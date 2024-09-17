@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { getAuth, onAuthStateChanged } from 'firebase/auth'; // Import Firebase Auth functions
-import { checkAdminStatus } from './utils/authUtils.js'; // Import the function to check admin status
+import { getAuth, onAuthStateChanged } from 'firebase/auth'; 
+import { checkAdminStatus } from './utils/authUtils.js'; 
 import AdminNavbar from './components/AdminNavbar.jsx';
 import UserNavbar from './components/UserNavbar.jsx';
 import Register from './pages/user/RegisterPage.js';
@@ -10,7 +10,7 @@ import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 import ManageAccommodations from './pages/admin/ManageAccommodations.jsx';
 import ManageRoom from './pages/admin/ManageRoom.js';
 import UserHomePage from './pages/user/UserHomepage.js';
-import RoomDetailsPage from './components/RoomDetails.jsx'; // Ensure the path is correct
+import RoomDetails from './components/RoomDetails.jsx'; 
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -91,21 +91,13 @@ const App = () => {
           )}
         />
         <Route 
-          path="/room-details" 
-          element={user && !isAdmin ? (
-            <>
-              <UserNavbar />
-              <RoomDetailsPage />
-            </>
-          ) : (
-            <Navigate to="/login" />
-          )}
-        />
-
+          path="/room/:id" 
+          element={<RoomDetails/>}/>
+           
         {/* Default Route */}
         <Route 
           path="/" 
-          element={user ? (isAdmin ? <Navigate to="/dashboard" /> : <Navigate to="/user-homepage" />) : <Navigate to="/login" />}
+          element={user ? (isAdmin ? <Navigate to="/dashboard" /> : <Navigate to="/user-homepage" />) : <Navigate to="/login" /> }
         />
       </Routes>
     </Router>
