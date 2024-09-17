@@ -41,7 +41,7 @@ function LoginPage() {
       );
 
       setSuccessMessage('User logged in successfully!');
-      setTimeout(() => navigate(isAdmin ? '/admin' : '/'), 2000);
+      setTimeout(() => navigate(isAdmin ? '/dashboard' : '/'), 2000);
     } catch (error) {
       dispatch(loginFailure(error.message));
     }

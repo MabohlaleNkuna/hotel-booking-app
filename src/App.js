@@ -28,6 +28,7 @@ const App = () => {
         setUser(null);
         setIsAdmin(false);
       }
+      console.log(currentUser)
       setLoading(false);
     });
 
