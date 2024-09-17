@@ -115,7 +115,6 @@ const AdminDashboard = () => {
               <div style={styles.details}>
                 <h4>{accommodation.name}</h4>
                 <p>{accommodation.description}</p>
-                {/* Add more accommodation details if needed */}
               </div>
             </li>
           ))}
