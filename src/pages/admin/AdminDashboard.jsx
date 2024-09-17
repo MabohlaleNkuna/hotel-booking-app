@@ -111,7 +111,7 @@ const AdminDashboard = () => {
               onMouseEnter={e => e.currentTarget.style.backgroundColor = '#f1f1f1'}
               onMouseLeave={e => e.currentTarget.style.backgroundColor = 'white'}
             >
-              <img src={accommodation.imageUrl} alt={`Image of ${accommodation.name}`} style={styles.image} />
+              <img src={accommodation.mainImage} alt={`Image of ${accommodation.name}`} style={styles.image} />
               <div style={styles.details}>
                 <h4>{accommodation.name}</h4>
                 <p>{accommodation.description}</p>
@@ -135,14 +135,13 @@ const AdminDashboard = () => {
               <div style={styles.details}>
                 <h4>{room.name}</h4>
                 <p>{room.description}</p>
-                {/* Add more room details if needed */}
+               
               </div>
             </li>
           ))}
         </ul>
       </section>
 
-      {/* Removed Guest List section */}
     </div>
   );
 };

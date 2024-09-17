@@ -72,9 +72,10 @@ const UserHomePage = () => {
               backgroundColor: 'transparent' 
             }}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
-                {accommodation.imageUrls && accommodation.imageUrls[0] && (
-                  <img src={accommodation.imageUrls[0]} alt={accommodation.name} width="300" style={{ borderRadius: '8px', marginBottom: '20px' }} />
-                )}
+                
+                  
+                  <img src={accommodation.mainImage} alt={accommodation.name} width="300" style={{ borderRadius: '8px', marginBottom: '20px' }} />
+             
                 <h3 style={{ fontSize: '24px', marginBottom: '10px' }}>{accommodation.name}</h3>
                 <p style={{ fontSize: '16px', textAlign: 'center', marginBottom: '10px' }}>{accommodation.description}</p>
               </div>
@@ -149,3 +150,4 @@ const UserHomePage = () => {
 };
 
 export default UserHomePage;
+

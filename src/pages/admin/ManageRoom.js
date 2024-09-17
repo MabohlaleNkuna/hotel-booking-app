@@ -1,146 +1,319 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { fetchAccommodations } from '../../redux/accommodationsSlice.js';
-import { fetchRooms } from '../../redux/roomSlice.js';
-import SearchBar from '../../components/SearchBar.jsx'; // Import the SearchBar component
+import { fetchRooms, addRoom, editRoom, deleteRoom } from '../../redux/roomSlice.js';
+import { Button, Form, Col, Row } from 'react-bootstrap';
 
-const UserHomePage = () => {
+const ManageRoom = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { list: accommodations, loading: accommodationsLoading, error: accommodationsError } = useSelector((state) => state.accommodations);
-  const { list: rooms, loading: roomsLoading, error: roomsError } = useSelector((state) => state.rooms);
-  
-  const [filteredRooms, setFilteredRooms] = useState([]);
+  const { list: rooms, loading, error } = useSelector((state) => state.rooms);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    capacity: '',
+    price: '',
+    amenities: '',
+    roomType: '',
+    imageFiles: [],
+  });
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchAccommodations());
     dispatch(fetchRooms());
   }, [dispatch]);
 
-  useEffect(() => {
-    setFilteredRooms(rooms);
-  }, [rooms]);
-
-  if (accommodationsLoading || roomsLoading) return <p>Loading...</p>;
-  if (accommodationsError || roomsError) return <p>Error: {accommodationsError || roomsError}</p>;
-
-  const handleViewDetails = (roomId) => {
-    navigate(`/room/${roomId}`);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === 'roomType') {
+      updateAmenities(value);
+    }
   };
 
-  const handleSearch = (searchTerm) => {
-    if (!searchTerm) {
-      setFilteredRooms(rooms); 
-      return;
+  const handleFileChange = (e) => {
+    setFormData((prev) => ({ ...prev, imageFiles: Array.from(e.target.files) }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (editingId) {
+      await dispatch(editRoom({ id: editingId, updatedData: formData, imageFiles: formData.imageFiles }));
+    } else {
+      await dispatch(addRoom(formData));
     }
 
-    const filteredRooms = rooms.filter((room) => {
-      return room.roomType && room.roomType.toLowerCase().includes(searchTerm.toLowerCase());
+    setFormData({
+      name: '',
+      description: '',
+      capacity: '',
+      price: '',
+      amenities: '',
+      roomType: '',
+      imageFiles: [],
     });
-  
-    setFilteredRooms(filteredRooms);
+    setEditingId(null);
+  };
+
+  const handleEdit = (room) => {
+    setFormData({
+      name: room.name,
+      description: room.description,
+      capacity: room.capacity,
+      price: room.price,
+      amenities: room.amenities,
+      roomType: room.roomType,
+      imageFiles: [],
+    });
+    setEditingId(room.id);
+  };
+
+  const handleDelete = (id) => {
+    dispatch(deleteRoom(id));
+  };
+
+  const updateAmenities = (roomType) => {
+    let amenities = '';
+    switch (roomType) {
+      case 'Standard':
+        amenities = 'Basic amenities, Free WiFi';
+        break;
+      case 'Deluxe':
+        amenities = 'Enhanced amenities, Free WiFi, Mini-bar';
+        break;
+      case 'Suite':
+        amenities = 'Luxurious amenities, Free WiFi, Mini-bar, Jacuzzi';
+        break;
+      default:
+        amenities = '';
+    }
+    setFormData((prev) => ({ ...prev, amenities }));
+  };
+
+  // Inline styles
+  const styles = {
+    container: {
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif',
+      backgroundColor: '#f9f9f9',
+    },
+    header: {
+      marginBottom: '20px',
+      color: '#004AAD',
+    },
+    formGroup: {
+      marginBottom: '15px',
+    },
+    formLabel: {
+      color: '#004AAD',
+      fontWeight: 'bold',
+    },
+    formControl: {
+      border: '1px solid #004AAD',
+      borderRadius: '5px',
+    },
+    formControlReadonly: {
+      backgroundColor: '#e9ecef',
+    },
+    submitButton: {
+      backgroundColor: '#004AAD',
+      border: 'none',
+      color: 'white',
+      padding: '10px 20px',
+      borderRadius: '5px',
+      cursor: 'pointer',
+    },
+    submitButtonHover: {
+      backgroundColor: '#003d7a',
+    },
+    imagePreview: {
+      marginTop: '10px',
+    },
+    imagePreviewImg: {
+      marginRight: '10px',
+      borderRadius: '5px',
+    },
+    errorMessage: {
+      color: '#FF0000',
+    },
+    loadingMessage: {
+      color: '#004AAD',
+    },
+    roomList: {
+      marginTop: '20px',
+    },
+    roomItem: {
+      borderBottom: '1px solid #ddd',
+      padding: '10px 0',
+      marginBottom: '10px',
+    },
+    roomItemTitle: {
+      color: '#004AAD',
+    },
+    editButton: {
+      backgroundColor: '#007bff',
+      border: 'none',
+      color: 'white',
+      padding: '5px 10px',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      marginRight: '5px',
+    },
+    deleteButton: {
+      backgroundColor: '#dc3545',
+      border: 'none',
+      color: 'white',
+      padding: '5px 10px',
+      borderRadius: '5px',
+      cursor: 'pointer',
+    },
   };
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f0f8ff', color: '#004AAD', padding: '20px' }}>
-      <h1 style={{ textAlign: 'center', fontSize: '36px', marginBottom: '20px' }}>Welcome to Botlhale Hotel</h1>
+    <div style={styles.container}>
+      <h1 style={styles.header}>Manage Rooms</h1>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group as={Row} style={styles.formGroup}>
+          <Form.Label column sm={2} style={styles.formLabel}>Name</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
+              style={styles.formControl}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} style={styles.formGroup}>
+          <Form.Label column sm={2} style={styles.formLabel}>Description</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              as="textarea"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              required
+              style={{ ...styles.formControl, ...styles.formControlReadonly }}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} style={styles.formGroup}>
+          <Form.Label column sm={2} style={styles.formLabel}>Capacity</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="number"
+              name="capacity"
+              value={formData.capacity}
+              onChange={handleInputChange}
+              required
+              style={styles.formControl}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} style={styles.formGroup}>
+          <Form.Label column sm={2} style={styles.formLabel}>Price</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handleInputChange}
+              required
+              style={styles.formControl}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} style={styles.formGroup}>
+          <Form.Label column sm={2} style={styles.formLabel}>Amenities</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="text"
+              name="amenities"
+              value={formData.amenities}
+              onChange={handleInputChange}
+              readOnly
+              style={{ ...styles.formControl, ...styles.formControlReadonly }}
+            />
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} style={styles.formGroup}>
+          <Form.Label column sm={2} style={styles.formLabel}>Room Type</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              as="select"
+              name="roomType"
+              value={formData.roomType}
+              onChange={handleInputChange}
+              required
+              style={styles.formControl}
+            >
+              <option value="">Select...</option>
+              <option value="Standard">Standard</option>
+              <option value="Deluxe">Deluxe</option>
+              <option value="Suite">Suite</option>
+            </Form.Control>
+          </Col>
+        </Form.Group>
+        <Form.Group as={Row} style={styles.formGroup}>
+          <Form.Label column sm={2} style={styles.formLabel}>Images</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              type="file"
+              name="imageFiles"
+              multiple
+              onChange={handleFileChange}
+              style={styles.formControl}
+            />
+          </Col>
+        </Form.Group>
+        <Button
+          variant="primary"
+          type="submit"
+          style={styles.submitButton}
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = styles.submitButtonHover.backgroundColor}
+          onMouseOut={(e) => e.currentTarget.style.backgroundColor = styles.submitButton.backgroundColor}
+        >
+          {editingId ? 'Update Room' : 'Add Room'}
+        </Button>
+      </Form>
 
-      {/* Add SearchBar component */}
-      <SearchBar onSearch={handleSearch} />
-
-      <section style={{ 
-        marginBottom: '40px', 
-        padding: '20px', 
-        backgroundColor: 'rgba(255, 255, 255, 0.8)', 
-        borderRadius: '8px', 
-        boxShadow: 'transparent' 
-      }}>
-        <h2 style={{ fontSize: '28px', marginBottom: '20px' }}>Available Accommodations</h2>
-        <ul style={{ listStyle: 'none', padding: '0' }}>
-          {accommodations.map(accommodation => (
-            <li key={accommodation.id} style={{ 
-              marginBottom: '40px', 
-              padding: '20px', 
-              border: '1px solid #004AAD', 
-              borderRadius: '8px', 
-              backgroundColor: 'transparent' 
-            }}>
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
-                {accommodation.imageUrls && accommodation.imageUrls[0] && (
-                  <img src={accommodation.imageUrls[0]} alt={accommodation.name} width="300" style={{ borderRadius: '8px', marginBottom: '20px' }} />
-                )}
-                <h3 style={{ fontSize: '24px', marginBottom: '10px' }}>{accommodation.name}</h3>
-                <p style={{ fontSize: '16px', textAlign: 'center', marginBottom: '10px' }}>{accommodation.description}</p>
+      {loading && <p style={styles.loadingMessage}>Loading...</p>}
+      {error && <p style={styles.errorMessage}>Error: {error}</p>}
+      <div style={styles.roomList}>
+        {rooms.map((room) => (
+          <div key={room.id} style={styles.roomItem}>
+            <h3 style={styles.roomItemTitle}>{room.name}</h3>
+            <p>{room.description}</p>
+            <p>Capacity: {room.capacity}</p>
+            <p>Price: R{room.price}</p>
+            <p>Amenities: {room.amenities}</p>
+            <p>Type: {room.roomType}</p>
+            {room.imageUrls && room.imageUrls.length > 0 && (
+              <div style={styles.imagePreview}>
+                {room.imageUrls.map((url, index) => (
+                  <img key={index} src={url} alt={`Room ${room.name}`} style={styles.imagePreviewImg} />
+                ))}
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-                <p><strong>Capacity:</strong> {accommodation.capacity}</p>
-                <p><strong>Amenities:</strong> {Array.isArray(accommodation.amenities) ? accommodation.amenities.join(', ') : 'N/A'}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section style={{ 
-        marginBottom: '40px', 
-        padding: '20px', 
-        backgroundColor: 'rgba(255, 255, 255, 0.8)', 
-        borderRadius: '8px', 
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' 
-      }}>
-        <h2 style={{ fontSize: '28px', marginBottom: '20px' }}>Available Rooms</h2>
-        <ul style={{ 
-          listStyle: 'none', 
-          padding: '0', 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(3, 1fr)', 
-          gap: '20px' 
-        }}>
-          {filteredRooms.map(room => (
-            <li key={room.id} style={{ 
-              padding: '20px', 
-              border: '1px solid #004AAD', 
-              borderRadius: '8px', 
-              backgroundColor: 'rgba(255, 255, 255, 0.8)' 
-            }}>
-              <h3 style={{ fontSize: '24px', marginBottom: '10px' }}>{room.name}</h3>
-              {room.imageUrls && room.imageUrls[0] && (
-                <img src={room.imageUrls[0]} alt={room.name} width="200" style={{ borderRadius: '8px', marginBottom: '10px' }} />
-              )}
-              <button 
-                onClick={() => handleViewDetails(room.id)} 
-                style={{
-                  backgroundColor: '#004AAD', 
-                  color: '#fff', 
-                  padding: '10px 20px', 
-                  border: 'none', 
-                  borderRadius: '8px', 
-                  cursor: 'pointer', 
-                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                  transition: 'box-shadow 0.3s ease',
-                }}
-                onMouseOver={(e) => e.target.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.3)'}
-                onMouseOut={(e) => e.target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)'}
-              >
-                View Details
-              </button>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section style={{ 
-        padding: '20px', 
-        backgroundColor: 'rgba(255, 255, 255, 0.8)', 
-        borderRadius: '8px', 
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' 
-      }}>
-        <h2 style={{ fontSize: '28px', marginBottom: '20px' }}>Upcoming Features</h2>
-        <p style={{ fontSize: '16px' }}>Stay tuned for more updates on our platform, including user reviews, booking options, and more!</p>
-      </section>
+            )}
+            <Button
+              style={styles.editButton}
+              onClick={() => handleEdit(room)}
+            >
+              Edit
+            </Button>
+            <Button
+              style={styles.deleteButton}
+              onClick={() => handleDelete(room.id)}
+            >
+              Delete
+            </Button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default UserHomePage;
+export default ManageRoom;
