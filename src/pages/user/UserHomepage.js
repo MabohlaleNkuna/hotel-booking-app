@@ -28,24 +28,25 @@ const UserHomePage = () => {
   const handleViewDetails = (roomId) => {
     navigate(`/room/${roomId}`);
   };
-
   const handleSearch = (searchTerm) => {
+    console.log('Search Term:', searchTerm);
+    console.log('Rooms:', rooms);
+  
     if (!searchTerm) {
-      setFilteredRooms(rooms); 
+      setFilteredRooms(rooms);
       return;
     }
   
     const filteredRooms = rooms.filter((room) => {
-
-      return room.type && typeof room.roomType === 'string' 
-        ? room.roomType.toLowerCase().includes(searchTerm.toLowerCase()) 
-        : false;
+      console.log('Room:', room);
+      // return room.roomType && typeof room.roomType === 'string' &&
+       return room.roomType.toLowerCase().includes(searchTerm.toLowerCase());
     });
   
+    console.log('Filtered Rooms:', filteredRooms);
     setFilteredRooms(filteredRooms);
   };
   
-
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f0f8ff', color: '#004AAD', padding: '20px' }}>
       <h1 style={{ textAlign: 'center', fontSize: '36px', marginBottom: '20px' }}>Welcome to Botlhale Hotel</h1>
