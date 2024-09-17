@@ -94,7 +94,6 @@ const App = () => {
           path="/room/:id" 
           element={<RoomDetails/>}/>
            
-        {/* Default Route */}
         <Route 
           path="/" 
           element={user ? (isAdmin ? <Navigate to="/dashboard" /> : <Navigate to="/user-homepage" />) : <Navigate to="/login" /> }

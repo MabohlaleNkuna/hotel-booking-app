@@ -12,6 +12,7 @@ const BookingForm = ({ room, onClose }) => {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [paymentError, setPaymentError] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); // Add state for success message
   
   const stripe = useStripe();
   const elements = useElements();
@@ -19,6 +20,7 @@ const BookingForm = ({ room, onClose }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!stripe || !elements) {
+      setPaymentError('Stripe has not yet loaded.');
       return;
     }
     
@@ -28,7 +30,15 @@ const BookingForm = ({ room, onClose }) => {
       return;
     }
     
-    dispatch(bookRoomRequest({ room, checkIn, checkOut, token: token.id }));
+    try {
+      await dispatch(bookRoomRequest({ room, checkIn, checkOut, token: token.id })).unwrap();
+      setSuccessMessage('Booking successful!'); // Set success message
+      setTimeout(() => {
+        onClose();
+      }, 2000); // Close the form after 2 seconds
+    } catch (err) {
+      setPaymentError('Failed to book room. Please try again.');
+    }
   };
 
   return (
@@ -50,6 +60,7 @@ const BookingForm = ({ room, onClose }) => {
           </div>
         </label>
         {paymentError && <p style={{ color: 'red' }}>{paymentError}</p>}
+        {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>} {/* Display success message */}
         <button type="submit" disabled={!stripe} style={{ backgroundColor: '#004AAD', color: '#fff', padding: '10px 20px', border: 'none', borderRadius: '5px', cursor: 'pointer', marginRight: '10px' }}>
           Submit
         </button>
