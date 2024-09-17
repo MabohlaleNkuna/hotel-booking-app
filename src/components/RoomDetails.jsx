@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchRoomById } from '../../src/redux/roomSlice.js';
-import { fetchReviewsForRoom } from '../../src/redux/reviewsSlice.js';
+import { fetchRoomById } from '../redux/roomSlice.js';
+import { fetchReviewsForRoom } from '../redux/reviewsSlice.js';
 import BookingForm from './BookingForm.jsx';
 import ReviewForm from './ReviewForm.jsx';
 

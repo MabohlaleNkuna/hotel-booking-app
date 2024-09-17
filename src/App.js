@@ -10,7 +10,7 @@ import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 import ManageAccommodations from './pages/admin/ManageAccommodations.jsx';
 import ManageRoom from './pages/admin/ManageRoom.js';
 import UserHomePage from './pages/user/UserHomepage.js';
-import RoomDetailsPage from './components/RoomDetals.jsx'; // Ensure the path is correct
+import RoomDetailsPage from './components/RoomDetails.jsx'; // Ensure the path is correct
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -45,7 +45,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
-        {/* Protected Routes */}
+        {/* Redirect after login */}
         <Route 
           path="/dashboard" 
           element={user && isAdmin ? (
@@ -105,7 +105,7 @@ const App = () => {
         {/* Default Route */}
         <Route 
           path="/" 
-          element={<Navigate to="/login" />}
+          element={user ? (isAdmin ? <Navigate to="/dashboard" /> : <Navigate to="/user-homepage" />) : <Navigate to="/login" />}
         />
       </Routes>
     </Router>
