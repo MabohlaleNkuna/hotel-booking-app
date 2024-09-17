@@ -1,19 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchAccommodations } from '../../redux/accommodationsSlice.js';
 import { fetchRooms } from '../../redux/roomSlice.js';
+import SearchBar from '../../components/SearchBar.jsx'; // Import the SearchBar component
 
 const UserHomePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { list: accommodations, loading: accommodationsLoading, error: accommodationsError } = useSelector((state) => state.accommodations);
   const { list: rooms, loading: roomsLoading, error: roomsError } = useSelector((state) => state.rooms);
+  
+  const [filteredRooms, setFilteredRooms] = useState([]);
 
   useEffect(() => {
     dispatch(fetchAccommodations());
     dispatch(fetchRooms());
   }, [dispatch]);
+
+  useEffect(() => {
+    setFilteredRooms(rooms);
+  }, [rooms]);
 
   if (accommodationsLoading || roomsLoading) return <p>Loading...</p>;
   if (accommodationsError || roomsError) return <p>Error: {accommodationsError || roomsError}</p>;
@@ -22,15 +29,47 @@ const UserHomePage = () => {
     navigate(`/room/${roomId}`);
   };
 
+  const handleSearch = (searchTerm) => {
+    if (!searchTerm) {
+      setFilteredRooms(rooms); 
+      return;
+    }
+  
+    const filteredRooms = rooms.filter((room) => {
+
+      return room.type && typeof room.roomType === 'string' 
+        ? room.roomType.toLowerCase().includes(searchTerm.toLowerCase()) 
+        : false;
+    });
+  
+    setFilteredRooms(filteredRooms);
+  };
+  
+
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f0f8ff', color: '#004AAD', padding: '20px' }}>
       <h1 style={{ textAlign: 'center', fontSize: '36px', marginBottom: '20px' }}>Welcome to Botlhale Hotel</h1>
-      
-      <section style={{ marginBottom: '40px', padding: '20px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+
+      {/* Add SearchBar component */}
+      <SearchBar onSearch={handleSearch} />
+
+      <section style={{ 
+        marginBottom: '40px', 
+        padding: '20px', 
+        backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+        borderRadius: '8px', 
+        boxShadow: 'transparent' 
+      }}>
         <h2 style={{ fontSize: '28px', marginBottom: '20px' }}>Available Accommodations</h2>
         <ul style={{ listStyle: 'none', padding: '0' }}>
           {accommodations.map(accommodation => (
-            <li key={accommodation.id} style={{ marginBottom: '40px', padding: '20px', border: '1px solid #004AAD', borderRadius: '8px' }}>
+            <li key={accommodation.id} style={{ 
+              marginBottom: '40px', 
+              padding: '20px', 
+              border: '1px solid #004AAD', 
+              borderRadius: '8px', 
+              backgroundColor: 'transparent' 
+            }}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
                 {accommodation.imageUrls && accommodation.imageUrls[0] && (
                   <img src={accommodation.imageUrls[0]} alt={accommodation.name} width="300" style={{ borderRadius: '8px', marginBottom: '20px' }} />
@@ -46,8 +85,14 @@ const UserHomePage = () => {
           ))}
         </ul>
       </section>
-      
-      <section style={{ marginBottom: '40px', padding: '20px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+
+      <section style={{ 
+        marginBottom: '40px', 
+        padding: '20px', 
+        backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+        borderRadius: '8px', 
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' 
+      }}>
         <h2 style={{ fontSize: '28px', marginBottom: '20px' }}>Available Rooms</h2>
         <ul style={{ 
           listStyle: 'none', 
@@ -56,8 +101,13 @@ const UserHomePage = () => {
           gridTemplateColumns: 'repeat(3, 1fr)', 
           gap: '20px' 
         }}>
-          {rooms.map(room => (
-            <li key={room.id} style={{ padding: '20px', border: '1px solid #004AAD', borderRadius: '8px' }}>
+          {filteredRooms.map(room => (
+            <li key={room.id} style={{ 
+              padding: '20px', 
+              border: '1px solid #004AAD', 
+              borderRadius: '8px', 
+              backgroundColor: 'rgba(255, 255, 255, 0.8)' 
+            }}>
               <h3 style={{ fontSize: '24px', marginBottom: '10px' }}>{room.name}</h3>
               {room.imageUrls && room.imageUrls[0] && (
                 <img src={room.imageUrls[0]} alt={room.name} width="200" style={{ borderRadius: '8px', marginBottom: '10px' }} />
@@ -70,8 +120,12 @@ const UserHomePage = () => {
                   padding: '10px 20px', 
                   border: 'none', 
                   borderRadius: '8px', 
-                  cursor: 'pointer'
+                  cursor: 'pointer', 
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                  transition: 'box-shadow 0.3s ease',
                 }}
+                onMouseOver={(e) => e.target.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.3)'}
+                onMouseOut={(e) => e.target.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)'}
               >
                 View Details
               </button>
@@ -79,8 +133,13 @@ const UserHomePage = () => {
           ))}
         </ul>
       </section>
-      
-      <section style={{ padding: '20px', backgroundColor: '#fff', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+
+      <section style={{ 
+        padding: '20px', 
+        backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+        borderRadius: '8px', 
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' 
+      }}>
         <h2 style={{ fontSize: '28px', marginBottom: '20px' }}>Upcoming Features</h2>
         <p style={{ fontSize: '16px' }}>Stay tuned for more updates on our platform, including user reviews, booking options, and more!</p>
       </section>
