@@ -8,13 +8,14 @@ const UserNavbar = () => {
   const auth = getAuth();
  
   const handleLogout = () => {
-    // Add logout logic here (e.g., clearing tokens, localStorage, etc.)
+   
     signOut(auth).then(() => {
-      // Sign-out successful.
+  
     }).catch((error) => {
-      // An error happened.
+     
+      console.log(error);
     });
-    navigate('/login'); // Redirect to the login page after logout
+   
   };
 
   return (

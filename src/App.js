@@ -11,7 +11,7 @@ import ManageAccommodations from './pages/admin/ManageAccommodations.jsx';
 import ManageRoom from './pages/admin/ManageRoom.js';
 import UserHomePage from './pages/user/UserHomepage.js';
 import RoomDetails from './components/RoomDetails.jsx'; 
-import ProtectedRoute from './components/ProtectedRoute.jsx'; // Import the HOC
+import ProtectedRoute from './components/ProtectedRoute.jsx'; 
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -22,14 +22,17 @@ const App = () => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
+        console.log(currentUser)
         setUser(currentUser);
         const adminStatus = await checkAdminStatus(currentUser);
         setIsAdmin(adminStatus);
+        
       } else {
         setUser(null);
         setIsAdmin(false);
       }
       setLoading(false);
+     
     });
 
     return () => unsubscribe();
@@ -59,7 +62,7 @@ const App = () => {
           path="/login" 
           element={
             <ProtectedRoute 
-              isAuthenticated={!!user} 
+              isAuthenticated={!user} 
               isAdmin={isAdmin} 
               adminRequired={false}
             >

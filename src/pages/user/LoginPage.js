@@ -46,7 +46,7 @@ function LoginPage() {
       dispatch(loginFailure(error.message));
     }
   };
-
+ 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="card p-4 shadow-sm" style={{ maxWidth: '400px', width: '100%' }}>

@@ -1,19 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { db } from '../../src/firebaseConfig.js'; // Use db instead of firestore
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore'; // Import Firestore functions
+import { db } from '../../src/firebaseConfig.js'; 
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore'; 
 
 export const bookRoomRequest = createAsyncThunk(
   'booking/bookRoomRequest',
   async ({ room, checkIn, checkOut, token }, thunkAPI) => {
     try {
-      // Save booking to Firestore
-      const bookingRef = doc(db, 'bookings', new Date().getTime().toString()); // Create a new document reference
+ 
+      const bookingRef = doc(db, 'bookings', new Date().getTime().toString()); 
       await setDoc(bookingRef, {
         room,
         checkIn,
         checkOut,
         token,
-        createdAt: serverTimestamp() // Use serverTimestamp function
+        createdAt: serverTimestamp() 
       });
 
       return { room, checkIn, checkOut, token };
