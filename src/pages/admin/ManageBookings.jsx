@@ -1,33 +1,48 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchBookings, updateBookingStatus } from '../../redux/bookingsSlice';
+import { fetchBookings, deleteBooking, updateBooking } from '../../redux/bookingSlice';
 
 const ManageBookings = () => {
   const dispatch = useDispatch();
-  const { bookings, loading, error } = useSelector(state => state.bookings);
+  const bookings = useSelector((state) => state.booking.bookings);
+  const status = useSelector((state) => state.booking.status);
+  const error = useSelector((state) => state.booking.error);
 
   useEffect(() => {
-    dispatch(fetchBookings());
-  }, [dispatch]);
+    if (status === 'idle') {
+      dispatch(fetchBookings()); 
+    }
+  }, [dispatch, status]);
 
-  const handleUpdateStatus = (bookingId, status) => {
-    dispatch(updateBookingStatus({ bookingId, status }));
+  const handleDelete = (id) => {
+    dispatch(deleteBooking(id));
   };
 
+  const handleUpdate = (booking) => {
+    dispatch(updateBooking(booking)); 
+  };
+
+  if (status === 'loading') return <p>Loading bookings...</p>;
+  if (status === 'failed') return <p>Error: {error}</p>;
+
   return (
-    <div>
+    <div style={{ padding: '20px' }}>
       <h2>Manage Bookings</h2>
-      {loading && <p>Loading bookings...</p>}
-      {error && <p>Error fetching bookings: {error}</p>}
-      <div>
-        {bookings.map(booking => (
-          <div key={booking.id}>
-            <p>Booking for {booking.customerName} - Status: {booking.status}</p>
-            <button onClick={() => handleUpdateStatus(booking.id, 'Confirmed')}>Confirm</button>
-            <button onClick={() => handleUpdateStatus(booking.id, 'Canceled')}>Cancel</button>
-          </div>
-        ))}
-      </div>
+      {bookings.length === 0 ? (
+        <p>No bookings found.</p>
+      ) : (
+        <ul>
+          {bookings.map((booking) => (
+            <li key={booking.id}>
+              <p><strong>Room:</strong> {booking.room.name}</p>
+              <p><strong>Check-in:</strong> {booking.checkIn}</p>
+              <p><strong>Check-out:</strong> {booking.checkOut}</p>
+              <button onClick={() => handleUpdate(booking)}>Update</button>
+              <button onClick={() => handleDelete(booking.id)}>Delete</button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

@@ -11,7 +11,7 @@ export const fetchRooms = createAsyncThunk('rooms/fetchRooms', async () => {
 
 export const fetchRoomById = createAsyncThunk('rooms/fetchRoomById', async (id) => {
   const docRef = doc(db, 'rooms', id);
-  const docSnap = await getDoc(docRef); // Corrected to use getDoc
+  const docSnap = await getDoc(docRef); 
   if (docSnap.exists()) {
     return { id: docSnap.id, ...docSnap.data() };
   } else {

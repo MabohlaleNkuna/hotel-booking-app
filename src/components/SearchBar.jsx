@@ -21,8 +21,12 @@ const SearchBar = ({ onSearch }) => {
           maxWidth: '400px',
           borderRadius: '8px',
           border: '1px solid #004AAD',
-          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+          boxShadow: '0 2px 4px rgba(0, 0, 255, 0.2)', // Updated color
+          outline: 'none',
+          transition: 'box-shadow 0.3s ease',
         }}
+        onFocus={(e) => (e.target.style.boxShadow = '0 2px 8px rgba(0, 0, 255, 0.4)')}
+        onBlur={(e) => (e.target.style.boxShadow = '0 2px 4px rgba(0, 0, 255, 0.2)')}
       />
     </div>
   );

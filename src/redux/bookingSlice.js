@@ -1,27 +1,38 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { db } from '../../src/firebaseConfig.js'; 
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore'; 
+// bookingSlice.js
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { db, auth } from '../firebaseConfig.js'; 
 
-export const bookRoomRequest = createAsyncThunk(
-  'booking/bookRoomRequest',
-  async ({ room, checkIn, checkOut, token }, thunkAPI) => {
-    try {
- 
-      const bookingRef = doc(db, 'bookings', new Date().getTime().toString()); 
-      await setDoc(bookingRef, {
-        room,
-        checkIn,
-        checkOut,
-        token,
-        createdAt: serverTimestamp() 
-      });
+export const fetchBookings = createAsyncThunk('booking/fetchBookings', async () => {
+  const bookingsRef = collection(db, 'bookings');
+  const snapshot = await getDocs(bookingsRef);
+  const bookings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  return bookings;
+});
 
-      return { room, checkIn, checkOut, token };
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  }
-);
+export const deleteBooking = createAsyncThunk('booking/deleteBooking', async (id) => {
+  await deleteDoc(doc(db, 'bookings', id));
+  return id;
+});
+
+export const updateBooking = createAsyncThunk('booking/updateBooking', async (booking) => {
+  const { id, ...updateData } = booking;
+  await updateDoc(doc(db, 'bookings', id), updateData);
+  return booking;
+});
+
+export const bookRoomRequest = createAsyncThunk('booking/bookRoomRequest', async ({ room, checkIn, checkOut, token }) => {
+  const booking = {
+    room,
+    checkIn,
+    checkOut,
+    token,
+    userId: auth.currentUser?.uid, 
+    date: new Date().toISOString()
+  };
+  await addDoc(collection(db, 'bookings'), booking);
+  return booking;
+});
 
 const bookingSlice = createSlice({
   name: 'booking',
@@ -33,16 +44,25 @@ const bookingSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(bookRoomRequest.pending, (state) => {
+      .addCase(fetchBookings.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(bookRoomRequest.fulfilled, (state, action) => {
+      .addCase(fetchBookings.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.bookings.push(action.payload);
+        state.bookings = action.payload;
       })
-      .addCase(bookRoomRequest.rejected, (state, action) => {
+      .addCase(fetchBookings.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload;
+        state.error = action.error.message;
+      })
+      .addCase(deleteBooking.fulfilled, (state, action) => {
+        state.bookings = state.bookings.filter(booking => booking.id !== action.payload);
+      })
+      .addCase(updateBooking.fulfilled, (state, action) => {
+        const index = state.bookings.findIndex(booking => booking.id === action.payload.id);
+        if (index >= 0) {
+          state.bookings[index] = action.payload;
+        }
       });
   }
 });

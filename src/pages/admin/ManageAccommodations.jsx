@@ -31,7 +31,7 @@ const ManageAccommodations = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    // Ensure formData is updated when currentAccommodation changes
+   
     if (currentAccommodation) {
       setFormData({
         name: currentAccommodation.name,

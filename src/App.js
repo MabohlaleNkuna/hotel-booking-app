@@ -9,6 +9,7 @@ import Login from './pages/user/LoginPage.js';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 import ManageAccommodations from './pages/admin/ManageAccommodations.jsx';
 import ManageRoom from './pages/admin/ManageRoom.js';
+import ManageBookings from './pages/admin/ManageBookings.jsx';
 import UserHomePage from './pages/user/UserHomepage.js';
 import RoomDetails from './components/RoomDetails.jsx'; 
 import ProtectedRoute from './components/ProtectedRoute.jsx'; 
@@ -113,6 +114,21 @@ const App = () => {
               <>
                 <AdminNavbar />
                 <ManageRoom />
+              </>
+            </ProtectedRoute>
+          }
+        />
+        <Route 
+          path="/manage-bookings" 
+          element={
+            <ProtectedRoute 
+              isAuthenticated={!!user} 
+              isAdmin={isAdmin} 
+              adminRequired={true}
+            >
+              <>
+                <AdminNavbar />
+                <ManageBookings />
               </>
             </ProtectedRoute>
           }

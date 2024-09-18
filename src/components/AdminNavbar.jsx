@@ -25,6 +25,7 @@ const AdminNavbar = () => {
           <Nav.Link as={Link} to="/dashboard">Dashboard</Nav.Link>
           <Nav.Link as={Link} to="/manage-accommodations">Manage Accommodations</Nav.Link>
           <Nav.Link as={Link} to="/manage-rooms">Manage Rooms</Nav.Link>
+          <Nav.Link as={Link} to="/manage-bookings">Manage Bookings</Nav.Link>
           <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
         </Nav>
       </Navbar.Collapse>
