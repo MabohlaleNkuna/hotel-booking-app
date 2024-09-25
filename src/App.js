@@ -11,7 +11,8 @@ import ManageAccommodations from './pages/admin/ManageAccommodations.jsx';
 import ManageRoom from './pages/admin/ManageRoom.js';
 import ManageBookings from './pages/admin/ManageBookings.jsx';
 import UserHomePage from './pages/user/UserHomepage.js';
-import RoomDetails from './components/RoomDetails.jsx'; 
+import RoomDetails from './components/RoomDetails.jsx';
+import ProfilePage from './pages/user/ProfilePage.jsx'; // New Profile Page
 import ProtectedRoute from './components/ProtectedRoute.jsx'; 
 
 const App = () => {
@@ -23,17 +24,14 @@ const App = () => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        console.log(currentUser)
         setUser(currentUser);
         const adminStatus = await checkAdminStatus(currentUser);
         setIsAdmin(adminStatus);
-        
       } else {
         setUser(null);
         setIsAdmin(false);
       }
       setLoading(false);
-     
     });
 
     return () => unsubscribe();
@@ -151,6 +149,21 @@ const App = () => {
         <Route 
           path="/room/:id" 
           element={<RoomDetails />} 
+        />
+        <Route 
+          path="/profile" 
+          element={
+            <ProtectedRoute 
+              isAuthenticated={!!user} 
+              isAdmin={isAdmin} 
+              adminRequired={false}
+            >
+              <>
+                <UserNavbar />
+                <ProfilePage /> {/* Profile Page Route */}
+              </>
+            </ProtectedRoute>
+          }
         />
         <Route 
           path="/" 

@@ -1,0 +1,76 @@
+.profile-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-header {
+    text-align: center;
+    color: #004aad;
+    margin-bottom: 20px;
+  }
+  
+  .section-title {
+    color: #333;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .profile-details,
+  .bookings-section,
+  .favorites-section {
+    margin-bottom: 30px;
+  }
+  
+  .profile-details p,
+  .booking-item p,
+  .favorite-item p {
+    color: #555;
+  }
+  
+  button.edit-button,
+  button.save-button,
+  button.cancel-button,
+  button.view-button {
+    background-color: #004aad;
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button.save-button {
+    background-color: #4caf50;
+  }
+  
+  button.cancel-button {
+    background-color: #f44336;
+  }
+  
+  button.edit-button:hover,
+  button.save-button:hover,
+  button.cancel-button:hover,
+  button.view-button:hover {
+    background-color: #003580;
+  }
+  
+  .booking-list,
+  .favorites-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .booking-item,
+  .favorite-item {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  

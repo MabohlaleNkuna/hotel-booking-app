@@ -9,7 +9,7 @@ const MapComponent = () => {
       else if (window.innerWidth <= 1200) {
         return '400px';
     } else {
-      return '500px';
+      return '5km00px';
     }
   };
 
