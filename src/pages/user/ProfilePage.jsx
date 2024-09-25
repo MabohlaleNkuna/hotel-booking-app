@@ -4,11 +4,13 @@ import { db } from '../../firebaseConfig.js';
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { auth } from '../../firebaseConfig';
 import { updatePassword, deleteUser } from 'firebase/auth';
+import { fetchBookings, deleteBooking } from '../../redux/bookingSlice'; // Import your booking actions
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function ProfilePage() {
   const dispatch = useDispatch();
   const { user, loading, error } = useSelector((state) => state.user);
+  const { bookings } = useSelector((state) => state.booking); // Fetch bookings from the state
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -19,8 +21,9 @@ function ProfilePage() {
     if (user) {
       setEmail(user.email);
       setRole(user.role);
+      dispatch(fetchBookings()); // Fetch bookings when the user data is available
     }
-  }, [user]);
+  }, [user, dispatch]);
 
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
@@ -54,9 +57,15 @@ function ProfilePage() {
     }
   };
 
+  const handleCancelBooking = (bookingId) => {
+    if (window.confirm('Are you sure you want to cancel this booking?')) {
+      dispatch(deleteBooking(bookingId));
+    }
+  };
+
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-      <div className="card p-4 shadow-sm" style={{ maxWidth: '400px', width: '100%' }}>
+      <div className="card p-4 shadow-sm" style={{ maxWidth: '600px', width: '100%' }}>
         <h2 className="card-title text-center mb-4">Profile</h2>
         <form onSubmit={handleProfileUpdate}>
           <div className="mb-3">
@@ -106,9 +115,33 @@ function ProfilePage() {
           {successMessage && <p className="text-success text-center">{successMessage}</p>}
           {error && <p className="text-danger text-center">{error}</p>}
         </form>
+
+        <h3 className="mt-4">Your Bookings</h3>
+        {bookings && bookings.length > 0 ? (
+          <ul className="list-group">
+            {bookings.map((booking) => (
+              <li key={booking.id} className="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <p><strong>Room:</strong> {booking.room.name}</p>
+                  <p><strong>Check-in:</strong> {booking.checkIn}</p>
+                  <p><strong>Check-out:</strong> {booking.checkOut}</p>
+                </div>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleCancelBooking(booking.id)}
+                >
+                  Cancel
+                </button>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No bookings found.</p>
+        )}
+
         <button
           onClick={handleDeleteAccount}
-          className="btn btn-danger w-100 mt-2"
+          className="btn btn-danger w-100 mt-4"
         >
           Delete Account
         </button>
