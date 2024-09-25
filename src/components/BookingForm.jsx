@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { bookRoomRequest } from '../../src/redux/bookingSlice.js'; 
+import React, { useState, useEffect } from 'react'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { bookRoomRequest, fetchBookings } from '../../src/redux/bookingSlice.js'; 
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
@@ -9,15 +9,42 @@ const stripePromise = loadStripe('pk_test_51PzVFSRpGIk6DHpcj0EOqcKYvLEvHOqqiegKz
 
 const BookingForm = ({ room, onClose }) => {
   const dispatch = useDispatch();
+  const bookings = useSelector((state) => state.booking.bookings);
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [paymentError, setPaymentError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [isReviewing, setIsReviewing] = useState(false);
   const [paymentToken, setPaymentToken] = useState('');
+  const [isRoomAvailable, setIsRoomAvailable] = useState(true);
 
   const stripe = useStripe();
   const elements = useElements();
+
+  useEffect(() => {
+    // Fetch all bookings to check room availability
+    dispatch(fetchBookings());
+  }, [dispatch]);
+
+  const checkRoomAvailability = () => {
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+    
+    const isBooked = bookings.some(booking => {
+      const bookedCheckIn = new Date(booking.checkIn);
+      const bookedCheckOut = new Date(booking.checkOut);
+
+      // Check if the selected date range overlaps with any existing bookings for the same room
+      return (
+        booking.room.id === room.id &&
+        ((checkInDate >= bookedCheckIn && checkInDate < bookedCheckOut) || 
+        (checkOutDate > bookedCheckIn && checkOutDate <= bookedCheckOut) || 
+        (checkInDate <= bookedCheckIn && checkOutDate >= bookedCheckOut))
+      );
+    });
+
+    return !isBooked;
+  };
 
   const calculateTotalAmount = () => {
     const checkInDate = new Date(checkIn);
@@ -28,13 +55,22 @@ const BookingForm = ({ room, onClose }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!stripe || !elements) {
-      setPaymentError('Stripe has not yet loaded.');
+    
+    if (!checkIn || !checkOut) {
+      setPaymentError('Please select check-in and check-out dates.');
       return;
     }
 
-    if (!checkIn || !checkOut) {
-      setPaymentError('Please select check-in and check-out dates.');
+    const isAvailable = checkRoomAvailability();
+    setIsRoomAvailable(isAvailable);
+
+    if (!isAvailable) {
+      setPaymentError('Room is already booked for the selected dates.');
+      return;
+    }
+
+    if (!stripe || !elements) {
+      setPaymentError('Stripe has not yet loaded.');
       return;
     }
 
@@ -45,7 +81,6 @@ const BookingForm = ({ room, onClose }) => {
     }
 
     setPaymentToken(token.id); // Save the payment token for review
-
     setIsReviewing(true); // Switch to the review form
   };
 
@@ -107,6 +142,7 @@ const BookingForm = ({ room, onClose }) => {
               <CardElement />
             </div>
           </label>
+          {paymentError && <p style={{ color: 'red' }}>{paymentError}</p>}
           <button 
             type="submit" 
             disabled={!stripe} 
@@ -129,7 +165,7 @@ const BookingForm = ({ room, onClose }) => {
           <p><strong>Check-in Date:</strong> {checkIn}</p>
           <p><strong>Check-out Date:</strong> {checkOut}</p>
           <p><strong>Total Amount:</strong> R{calculateTotalAmount().toFixed(2)}</p>
-          <p><strong>Payment Token:</strong> {paymentToken}</p> {/* Display payment token */}
+          <p><strong>Payment Token:</strong> {paymentToken}</p>
           <form onSubmit={handleConfirmBooking}>
             {paymentError && <p style={{ color: 'red' }}>{paymentError}</p>}
             {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
