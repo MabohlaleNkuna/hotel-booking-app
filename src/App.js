@@ -46,7 +46,17 @@ const App = () => {
         {/* Public Routes */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-
+        <Route 
+          index         
+          element={
+          
+              <>
+                <UserNavbar />
+                <UserHomePage />
+              </>
+           
+          } 
+        />
         {/* Protected Routes */}
         <Route 
           path="/dashboard" 

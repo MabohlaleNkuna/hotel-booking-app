@@ -7,6 +7,7 @@ import SearchBar from '../../components/SearchBar.jsx';
 import MapComponent from '../../components/MapComponent.jsx'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faShareAlt } from '@fortawesome/free-solid-svg-icons';
+import { Container, Row, Col, Card } from 'react-bootstrap'; 
 import './userhomepage.css'; 
 
 const UserHomePage = () => {
@@ -39,11 +40,9 @@ const UserHomePage = () => {
       setFilteredRooms(rooms);
       return;
     }
-
     const filteredRooms = rooms.filter((room) =>
       room.roomType.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
     setFilteredRooms(filteredRooms);
   };
 
@@ -70,9 +69,17 @@ const UserHomePage = () => {
     }
   };
 
+  const roomsByType = filteredRooms.reduce((acc, room) => {
+    if (!acc[room.roomType]) {
+      acc[room.roomType] = [];
+    }
+    acc[room.roomType].push(room);
+    return acc;
+  }, {});
+
   return (
     <div className="container">
-      <h1 className="header">Welcome to Bohlale's HideAway</h1>
+      <h1 className="header">HOTEL BOOKING APP</h1>
 
       <SearchBar onSearch={handleSearch} className="search-bar" />
 
@@ -85,11 +92,6 @@ const UserHomePage = () => {
                 <div className="accommodation-image-container">
                   <img src={accommodation.mainImage} alt={accommodation.name} className="accommodation-image" />
                   <h3 className="accommodation-name">{accommodation.name}</h3>
-                  <p className="accommodation-description">{accommodation.description}</p>
-                </div>
-                <div className="accommodation-details">
-                  <p><strong>Capacity:</strong> {accommodation.capacity}</p>
-                  <p><strong>Amenities:</strong> {Array.isArray(accommodation.amenities) ? accommodation.amenities.join(', ') : 'N/A'}</p>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
                   <FontAwesomeIcon
@@ -121,25 +123,35 @@ const UserHomePage = () => {
         </div>
       </section>
 
-      <section className="rooms-section">
+      <Container className="mt-5">
         <h2 className="rooms-title">Available Rooms</h2>
-        <ul className="rooms-list">
-          {filteredRooms.map(room => (
-            <li key={room.id} className="room-item">
-              <h3 className="room-name">{room.name}</h3>
-              {room.imageUrls && room.imageUrls[0] && (
-                <img src={room.imageUrls[0]} alt={room.name} className="room-image" />
-              )}
-              <button
-                onClick={() => handleViewDetails(room.id)}
-                className="view-details-button"
-              >
-                View Details
-              </button>
-            </li>
-          ))}
-        </ul>
-      </section>
+        {Object.entries(roomsByType).map(([type, rooms]) => (
+          <div key={type} className="room-type-section">
+            <h2 className="room-type-title">{type.toUpperCase()}</h2>
+            <Row>
+              {rooms.map(room => (
+                <Col key={room.id} md={4} className="mb-4">
+                  <Card className="room-card">
+                    {room.imageUrls && room.imageUrls[0] && (
+                      <Card.Img variant="top" src={room.imageUrls[0]} alt={room.name} className="room-image" />
+                    )}
+                    <Card.Body>
+                      <Card.Title>{room.name}</Card.Title>
+                      <Card.Text><strong>Type:</strong> {room.roomType}</Card.Text>
+                      <button
+                        onClick={() => handleViewDetails(room.id)}
+                        className="view-details-button"
+                      >
+                        View Details
+                      </button>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          </div>
+        ))}
+      </Container>
     </div>
   );
 };

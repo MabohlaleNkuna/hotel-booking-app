@@ -14,6 +14,7 @@ const uploadImages = async (imageFiles, folder) => {
 
 export const fetchAccommodations = createAsyncThunk('accommodations/fetchAccommodations', async () => {
   const snapshot = await getDocs(collection(db, 'accommodations'));
+  console.log({snapshot, g:snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))})
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 });
 
@@ -65,6 +66,7 @@ const accommodationsSlice = createSlice({
         state.list = action.payload;
       })
       .addCase(fetchAccommodations.rejected, (state, action) => {
+        console.log(action)
         state.loading = false;
         state.error = action.error.message;
       })

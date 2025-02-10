@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Nav } from 'react-bootstrap';
-import { getAuth, signOut } from "firebase/auth";
-
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import './UserNavbar.css'; 
 const UserNavbar = () => {
   const navigate = useNavigate();
   const auth = getAuth();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+
+    return () => unsubscribe();
+  }, [auth]);
 
   const handleLogout = () => {
     signOut(auth).then(() => {
-      // Redirect after logout
       navigate('/login');
     }).catch((error) => {
       console.log(error);
@@ -17,14 +25,20 @@ const UserNavbar = () => {
   };
 
   return (
-    <Navbar bg="light" expand="lg">
-      <Navbar.Brand as={Link} to="/">User Panel</Navbar.Brand>
+    <Navbar expand="lg" className="custom-navbar">
+      <Navbar.Brand as={Link} to="/" className="brand">User Panel</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
-          <Nav.Link as={Link} to="/">Home</Nav.Link>
-          <Nav.Link as={Link} to="/profile">Profile</Nav.Link> {/* New Page Link */}
-          <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+        <Nav className="ml-auto">
+          <Nav.Link as={Link} to="/" className="nav-link">Home</Nav.Link>
+          {user ? (
+            <>
+              <Nav.Link as={Link} to="/profile" className="nav-link">Profile</Nav.Link>
+              <Nav.Link onClick={handleLogout} className="nav-link logout">Logout</Nav.Link>
+            </>
+          ) : (
+            <Nav.Link as={Link} to="/login" className="nav-link">Login</Nav.Link>
+          )}
         </Nav>
       </Navbar.Collapse>
     </Navbar>

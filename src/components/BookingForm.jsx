@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState, useEffect } from 'react';  
 import { useDispatch, useSelector } from 'react-redux';
 import { bookRoomRequest, fetchBookings } from '../../src/redux/bookingSlice.js'; 
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
-// Stripe's test key
 const stripePromise = loadStripe('pk_test_51PzVFSRpGIk6DHpcj0EOqcKYvLEvHOqqiegKzczzNzsMtdERTyN8vekJB8X0DWoGfty1MLY3jhDDitC32xD2UDMF00lv91Ixh5');
 
 const BookingForm = ({ room, onClose }) => {
@@ -22,7 +21,6 @@ const BookingForm = ({ room, onClose }) => {
   const elements = useElements();
 
   useEffect(() => {
-    // Fetch all bookings to check room availability
     dispatch(fetchBookings());
   }, [dispatch]);
 
@@ -34,7 +32,6 @@ const BookingForm = ({ room, onClose }) => {
       const bookedCheckIn = new Date(booking.checkIn);
       const bookedCheckOut = new Date(booking.checkOut);
 
-      // Check if the selected date range overlaps with any existing bookings for the same room
       return (
         booking.room.id === room.id &&
         ((checkInDate >= bookedCheckIn && checkInDate < bookedCheckOut) || 
@@ -80,8 +77,8 @@ const BookingForm = ({ room, onClose }) => {
       return;
     }
 
-    setPaymentToken(token.id); // Save the payment token for review
-    setIsReviewing(true); // Switch to the review form
+    setPaymentToken(token.id);
+    setIsReviewing(true);
   };
 
   const handleConfirmBooking = async (event) => {
@@ -94,7 +91,6 @@ const BookingForm = ({ room, onClose }) => {
     try {
       await dispatch(bookRoomRequest({ room, checkIn, checkOut, token: paymentToken })).unwrap();
       
-      // Save receipt data to local storage
       localStorage.setItem('receipt', JSON.stringify({
         room: room.name,
         amount: calculateTotalAmount().toFixed(2),
@@ -105,7 +101,7 @@ const BookingForm = ({ room, onClose }) => {
       setSuccessMessage('Booking successful! Receipt will be available on the Room Details page.');
       setTimeout(() => {
         onClose();
-      }, 2000); // Close the form after 2 seconds
+      }, 2000);
     } catch (err) {
       setPaymentError('Failed to book room. Please try again.');
     }
