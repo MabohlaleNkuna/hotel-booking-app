@@ -4,7 +4,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { checkAdminStatus } from './utils/authUtils.js'; 
 import AdminNavbar from './components/AdminNavbar.jsx';
 import UserNavbar from './components/UserNavbar.jsx';
-import Register from './pages/user/UserRegisterPage.js';
+import Register from './pages/user/RegisterPage.js';
 import Login from './pages/user/LoginPage.js';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 import ManageAccommodations from './pages/admin/ManageAccommodations.jsx';
@@ -43,7 +43,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-    
+        {/* Public Routes */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 

@@ -5,6 +5,7 @@
     padding: 20px;
 }
 
+
 .header {
     text-align: center;
     font-size: 36px;
@@ -12,9 +13,11 @@
     color: #004AAD;
 }
 
+
 .search-bar {
     margin-bottom: 20px;
 }
+
 
 .map-container {
     display: flex;
@@ -30,6 +33,7 @@
     border-radius: 8px;
     margin-top: 50px;
 }
+
 
 .accommodations {
     width: 100%;
@@ -131,6 +135,7 @@
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
+
 @media (max-width: 768px) {
     .header {
         font-size: 28px;
@@ -154,8 +159,7 @@
     .rooms-section {
         padding: 10px;
     }
-
-    .map {
+    .map{
         height: 20px;
     }
 
