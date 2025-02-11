@@ -4,11 +4,19 @@ import { collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from 'firebase
 import { db, auth } from '../firebaseConfig.js'; 
 
 export const fetchBookings = createAsyncThunk('booking/fetchBookings', async () => {
+  const userId = auth.currentUser?.uid;
+  if (!userId) throw new Error("User not authenticated");
+
   const bookingsRef = collection(db, 'bookings');
   const snapshot = await getDocs(bookingsRef);
-  const bookings = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  
+  const bookings = snapshot.docs
+    .map(doc => ({ id: doc.id, ...doc.data() }))
+    .filter(booking => booking.userId === userId); 
+
   return bookings;
 });
+
 
 export const deleteBooking = createAsyncThunk('booking/deleteBooking', async (id) => {
   await deleteDoc(doc(db, 'bookings', id));
