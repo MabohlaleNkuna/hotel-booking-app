@@ -14,10 +14,9 @@ const RoomDetailsPage = () => {
   const auth = getAuth();
   const user = auth.currentUser;
   const { room, loading, error } = useSelector((state) => state.rooms);
-  const { reviews, loading: reviewsLoading, error: reviewsError } = useSelector((state) => state.reviews);
+  const { loading: reviewsLoading, error: reviewsError } = useSelector((state) => state.reviews);
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
-  const [showReviews, setShowReviews] = useState(false);
   const [bookingSummary, setBookingSummary] = useState(null);
 
   useEffect(() => {

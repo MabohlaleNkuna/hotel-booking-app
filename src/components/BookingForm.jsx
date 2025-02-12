@@ -139,6 +139,7 @@ const BookingForm = ({ room, onClose }) => {
             </div>
           </label>
           {paymentError && <p style={{ color: 'red' }}>{paymentError}</p>}
+          {!isRoomAvailable && <p style={{ color: 'red' }}>Room is not available for the selected dates.</p>}
           <button 
             type="submit" 
             disabled={!stripe} 
