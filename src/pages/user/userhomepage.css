@@ -1,193 +1,127 @@
-.container {
+/* Global Styles */
+.home-container {
     font-family: Arial, sans-serif;
-    background-color: #f0f8ff;
+   
     color: #004AAD;
-    padding: 20px;
+    padding: 0;
+    background-image: url('../../assets/background.webp');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    height: 100vh;
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 20px; /* Added bottom padding to avoid footer overlap */
 }
-
 
 .header {
-    text-align: center;
-    font-size: 36px;
-    margin-bottom: 20px;
-    color: #004AAD;
+    font-size: 50px;
+    font-weight: bold;
+    margin-top: 100px;
+    color: #ffffff;
 }
-
 
 .search-bar {
-    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-bottom: 40px;
 }
-
 
 .map-container {
+    margin-top: 40px;
+    margin-bottom: 400px; 
     display: flex;
-    align-items: center;
     justify-content: center;
-    margin-top: 10px;
 }
 
-.map {
-    width: 100%;
-    max-width: 900px; 
-    height: auto;
-    border-radius: 8px;
-    margin-top: 50px;
-}
-
-
-.accommodations {
-    width: 100%;
-    max-width: 1000px;
-    margin: auto;
-}
-
-.accommodations-title {
-    font-size: 28px;
-    margin-bottom: 20px;
-    color: #004AAD;
+.accommodations-section {
+    background-color: transparent;
+    margin-bottom: 60px; /* Added margin to create space between map and accommodation */
 }
 
 .accommodations-list {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
     list-style: none;
-    padding: 0;
 }
 
 .accommodation-item {
-    margin-bottom: 40px;
+    background: transparent;
     padding: 20px;
-    border: transparent;
     border-radius: 8px;
-    background-color: #ffffff;
+    margin-bottom: 30px;
+    width: 30rem; /* Keeps the current width */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .accommodation-image {
     width: 100%;
-    max-width: 900px;
+    height: auto;
     border-radius: 8px;
     margin-bottom: 20px;
 }
 
 .accommodation-name {
     font-size: 24px;
-    margin-bottom: 10px;
-    color: #004AAD;
-}
-
-.accommodation-description {
-    font-size: 16px;
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.rooms-section {
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #ffffff;
 }
 
 .rooms-title {
-    font-size: 28px;
-    margin-bottom: 20px;
+    font-size: 32px;
+    margin-bottom: 40px;
     color: #004AAD;
 }
 
-.rooms-list {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-}
-
-.room-item {
-    padding: 20px;
-    border: 1px solid #004AAD;
-    border-radius: 8px;
-    background-color: #ffffff;
-}
-
-.room-name {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: #004AAD;
+.room-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .room-image {
-    border-radius: 8px;
-    margin-bottom: 10px;
     width: 100%;
     height: auto;
+    border-radius: 10px;
 }
 
 .view-details-button {
     background-color: #004AAD;
-    color: #ffffff;
+    color: #fff;
     padding: 10px 20px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
 }
 
 .view-details-button:hover {
+    background-color: #003580;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
+.map {
+    width: 80%;
+    height: 50px;
+}
 
 @media (max-width: 768px) {
     .header {
         font-size: 28px;
     }
 
-    .accommodation-name,
-    .room-name {
-        font-size: 20px;
+    .accommodation-item {
+        width: 100%;
+        margin-bottom: 20px;
     }
 
-    .accommodation-description {
-        font-size: 14px;
-    }
-
-    .view-details-button {
-        padding: 8px 16px;
-        font-size: 14px;
-    }
-
-    .map-container,
-    .rooms-section {
-        padding: 10px;
-    }
-    .map{
-        height: 20px;
-    }
-
-    .rooms-list {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-}
-
-@media (max-width: 480px) {
-    .header {
+    .rooms-title {
         font-size: 24px;
     }
 
-    .accommodation-name,
-    .room-name {
-        font-size: 18px;
-    }
-
-    .accommodation-description {
-        font-size: 12px;
-    }
-
-    .view-details-button {
-        padding: 6px 12px;
-        font-size: 12px;
-    }
-
-    .rooms-list {
-        grid-template-columns: 1fr;
+    .map {
+        width: 100%; 
+        height: 200px;
     }
 }

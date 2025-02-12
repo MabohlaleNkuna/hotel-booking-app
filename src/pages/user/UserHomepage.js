@@ -78,13 +78,12 @@ const UserHomePage = () => {
   }, {});
 
   return (
-    <div className="container">
+    <div className="home-container">
       <h1 className="header">HOTEL BOOKING APP</h1>
 
       <SearchBar onSearch={handleSearch} className="search-bar" />
 
-      <section className="map-container">
-        <MapComponent className="map" />
+      <section className="accommodations-section">
         <div className="accommodations">
           <ul className="accommodations-list">
             {accommodations.map(accommodation => (
@@ -121,6 +120,10 @@ const UserHomePage = () => {
             ))}
           </ul>
         </div>
+      </section>
+
+      <section className="map-container">
+        <MapComponent className="map" />
       </section>
 
       <Container className="mt-5">
