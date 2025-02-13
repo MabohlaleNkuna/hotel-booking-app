@@ -1,20 +1,24 @@
 .custom-navbar {
-    background: #004AAD; 
+  background: 0px 4px 6px rgba(110, 110, 110, 0.1) !important;
     padding: 12px 20px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   }
   
   .brand {
-    color: #fff !important;
+    color: #1b1a1a !important;
     font-size: 20px;
-    font-weight: bold;
+    font-weight: bold  !important;
+  }
+  .brand:hover {
+    color: #F4C561 !important; 
   }
   
   .nav-link {
-    color: #fff !important;
+    color: #3a3535 !important;
     font-size: 16px;
     margin-right: 15px;
     transition: 0.3s;
+    font-weight: bold  !important;
   }
   
   .nav-link:hover {
@@ -22,14 +26,12 @@
   }
   
   .logout {
-    background: #d9534f;
     padding: 5px 15px;
     border-radius: 5px;
   }
   
   .logout:hover {
-    background: #c9302c;
-    color: white !important;
+    color: #c9302c !important;
     width: 20%;
   }
   

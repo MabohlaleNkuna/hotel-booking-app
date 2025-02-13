@@ -26,7 +26,6 @@ const UserNavbar = () => {
 
   return (
     <Navbar expand="lg" className="custom-navbar">
-      <Navbar.Brand as={Link} to="/" className="brand">User Panel</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
