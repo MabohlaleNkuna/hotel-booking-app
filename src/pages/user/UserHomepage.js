@@ -140,7 +140,7 @@ const UserHomePage = () => {
                     )}
                     <Card.Body>
                       <Card.Title>{room.name}</Card.Title>
-                      <Card.Text><strong>Type:</strong> {room.roomType}</Card.Text>
+                     
                       <button
                         onClick={() => handleViewDetails(room.id)}
                         className="view-details-button"
