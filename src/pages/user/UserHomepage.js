@@ -98,7 +98,7 @@ const UserHomePage = () => {
                     onClick={() => handleAddToFavorites(accommodation.id)}
                     style={{
                       cursor: 'pointer',
-                      color: favorites.has(accommodation.id) ? '#4caf50' : '#004AAD',
+                      color: favorites.has(accommodation.id) ? '#4caf50' : '#FFD700',
                       fontSize: '24px',
                       transition: 'color 0.3s ease'
                     }}

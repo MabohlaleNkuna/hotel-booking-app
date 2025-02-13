@@ -118,12 +118,13 @@
 }
 
 .accommodation-name {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
-    color: #F4C561;
+    color: #f8b931;
     margin-top: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 4px 4px 6px rgba(1, 24, 151, 0.856);
 }
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
