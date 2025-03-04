@@ -3,7 +3,7 @@
     font-family: Arial, sans-serif;
     color: #04d2f7;
     padding: 0;
-    background-image: url('../../assets/bg2.webp');
+    background:#ffffff;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
@@ -19,7 +19,7 @@
     padding: 15px;
     margin: 15px;
     width: fit-content;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(149, 219, 247, 0.151);
     margin-left: 3rem;
 }
 
@@ -51,7 +51,7 @@
 
 /* Room Cards */
 .room-card {
-    background: rgba(65, 64, 64, 0.432);
+    background: rgba(149, 219, 247, 0.151);
     border: none;
     border-radius: 15px;
     box-shadow: 5px 5px 15px rgba(3, 215, 252, 0.685);
@@ -101,7 +101,7 @@
 
 /* Accommodations */
 .accommodation-item {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(149, 219, 247, 0.151);
     border-radius: 10px;
     padding: 15px;
     margin: 15px;
@@ -172,7 +172,7 @@
         height: auto;  
         margin: 0 auto;  
         padding: 10px;  
-        overflow: none;  
+        overflow: hidden;  
     }
 
     .map {
