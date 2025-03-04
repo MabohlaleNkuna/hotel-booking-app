@@ -6,7 +6,7 @@ import { fetchRooms } from '../../redux/roomSlice.js';
 import SearchBar from '../../components/SearchBar.jsx';
 import MapComponent from '../../components/MapComponent.jsx'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faShareAlt } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faShareAlt, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { Container, Row, Col, Card } from 'react-bootstrap'; 
 import './userhomepage.css'; 
 
@@ -18,6 +18,7 @@ const UserHomePage = () => {
 
   const [filteredRooms, setFilteredRooms] = useState([]);
   const [favorites, setFavorites] = useState(new Set());
+  const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
     dispatch(fetchAccommodations());
@@ -122,9 +123,20 @@ const UserHomePage = () => {
         </div>
       </section>
 
-      <section className="map-container">
-        <MapComponent className="map" />
-      </section>
+      {/* View on Map Link */}
+      <div className="map-toggle">
+        <button className="view-map-button" onClick={() => setShowMap(!showMap)}>
+          <FontAwesomeIcon icon={faMapMarkerAlt} style={{ marginRight: '8px' }} />
+          View on Map
+        </button>
+      </div>
+
+      {/* Map Section (only visible when clicked) */}
+      {showMap && (
+        <section className="map-container">
+          <MapComponent className="map" />
+        </section>
+      )}
 
       <Container className="mt-5">
         <h2 className="rooms-title">Available Rooms</h2>

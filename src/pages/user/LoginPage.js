@@ -49,7 +49,7 @@ function LoginPage() {
  
   return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-      <div className="card p-4 shadow-sm" style={{ maxWidth: '400px', width: '100%' }}>
+      <div className="card p-4 shadow-sm" style={{  color: '#004AAD',maxWidth: '400px', width: '100%' }}>
         <h2 className="card-title text-center mb-4">Login</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-3">

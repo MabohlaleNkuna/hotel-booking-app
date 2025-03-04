@@ -1,7 +1,7 @@
 /* Global Styles */
 .home-container {
     font-family: Arial, sans-serif;
-    color: #004AAD;
+    color: #04d2f7;
     padding: 0;
     background-image: url('../../assets/bg2.webp');
     background-size: cover;
@@ -43,7 +43,7 @@
     color: #ffffff;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     margin-bottom: 20px;
-    background: rgba(0, 74, 173, 0.8);
+    background: rgba(7, 141, 194, 0.8);
     padding: 10px;
     border-radius: 10px;
     display: inline-block;
@@ -51,10 +51,10 @@
 
 /* Room Cards */
 .room-card {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(65, 64, 64, 0.432);
     border: none;
     border-radius: 15px;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 5px 5px 15px rgba(3, 215, 252, 0.685);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .room-card:hover {
@@ -74,7 +74,7 @@
 .card-title {
     font-size: 22px;
     font-weight: bold;
-    color: #013f9c;
+    color: #02d7fd;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 .rooms-title{
@@ -118,11 +118,11 @@
 }
 
 .accommodation-name {
-    font-size: 28px;
-    font-weight: bold;
-    color: #f8b931;
+    font-size: 32px;
+    font-weight:bolder;
+    color: #004AAD;
     margin-top: 20px;
-    text-shadow: 4px 4px 6px rgba(1, 24, 151, 0.856);
+    text-shadow: 4px 4px 6px rgb(255, 255, 255);
 }
 
 
@@ -151,3 +151,72 @@
         font-size: 24px;
     }
 }
+@media (min-width: 1000px) {
+    .accommodation-item {
+        width: 80%; 
+        max-width: 900px; 
+        margin: auto; 
+        text-align: center; 
+       
+    }
+    .map-container {
+        text-align: center; 
+        margin-left: 530px;
+    }
+}
+
+@media (max-width: 360px) {
+    .map-container {
+        width: 90%;  
+        max-width: 320px; 
+        height: auto;  
+        margin: 0 auto;  
+        padding: 10px;  
+        overflow: none;  
+    }
+
+    .map {
+        width: 100%;
+        height: 200px; 
+        display: block; 
+        margin-left: 60px;
+    }
+}
+
+.map-toggle {
+    text-align: center;
+    margin: 20px;
+}
+
+
+
+.view-map-button:hover {
+    background-color: #F4C561;
+    transform: scale(1.05);
+}
+.view-details-button, .view-map-button {
+    background-color: #F4C561;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #004AAD;
+    border-radius: 8px;
+    transition: background 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+    width: auto; 
+    display: block;
+    margin: auto;
+}
+
+.view-details-button:hover, .view-map-button:hover {
+    background-color: #FFD700;
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .view-details-button, .view-map-button {
+        width: 100%; 
+    }
+}
+

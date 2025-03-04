@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
 import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Nav } from 'react-bootstrap';
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import logo from '../assets/bohlales_hideaway_logo_transparent.png';
 import './UserNavbar.css'; 
+
 const UserNavbar = () => {
   const navigate = useNavigate();
   const auth = getAuth();
@@ -26,6 +28,9 @@ const UserNavbar = () => {
 
   return (
     <Navbar expand="lg" className="custom-navbar">
+      <Navbar.Brand as={Link} to="/" className="brand">
+        <img src={logo} alt="Logo" className="navbar-logo" /> {/* Logo */}
+      </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ml-auto">
