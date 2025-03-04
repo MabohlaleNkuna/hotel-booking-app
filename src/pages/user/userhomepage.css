@@ -29,7 +29,7 @@
     font-weight: bold;
     text-shadow: 3px 3px 5px rgba(3, 91, 207, 0.849);
     margin-top: 20px;
-    color: #F4C561;
+    color: #f8b117;
     transition: color 0.3s ease;
 }
 .header:hover {

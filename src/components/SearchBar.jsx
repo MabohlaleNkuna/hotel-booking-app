@@ -20,8 +20,8 @@ const SearchBar = ({ onSearch }) => {
           width: '80%',
           maxWidth: '400px',
           borderRadius: '8px',
-          border: '1px solid #004AAD',
-          boxShadow: '0 2px 4px rgba(0, 0, 255, 0.2)', // Updated color
+          border: '2px' ,
+          boxShadow: '0 2px 4px rgba(3, 35, 95, 0.75)', // Updated color
           outline: 'none',
           transition: 'box-shadow 0.3s ease',
         }}
